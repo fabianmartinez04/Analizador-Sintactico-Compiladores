@@ -177,11 +177,13 @@ public class frmPrincipal extends javax.swing.JFrame {
             Lexer lexer = new Lexer(lector);
             //String resultado = "";
             int linea = 0;
+            int columna = 0;
             tabla = new TablaSimbolos();
             String error = "";
             while (true) {
                 TipoToken tokens = lexer.yylex();
                 linea = lexer.row;
+                columna = lexer.column;
                 //System.out.println(linea);
                 System.out.println("Token: " + lexer.lexeme + " Linea: " + lexer.row + " Columna: " + lexer.column + "\n");
                 if (tokens == TipoToken.Error || tokens == TipoToken.ERROR) {
@@ -212,7 +214,8 @@ public class frmPrincipal extends javax.swing.JFrame {
                         if(tokens != TipoToken.Error && tokens!= TipoToken.ERROR){
                             Token token = new Token(String.valueOf(lexer.lexeme), tokens);
                             token.lineas.add(linea);
-                            tabla.agregarToken(token, linea);
+                            // token.columnas.add(columna);
+                            tabla.agregarToken(token, linea,columna);
                         }
 
                     }
