@@ -14,9 +14,9 @@ import java.io.File;
  */
 public class Principal {
     public static void main(String[] args) {
-        String ruta = "C:/Users/liset/OneDrive/Documentos/Ingeniería en Computación/Computación V Semestre/Compiladores e intérpretes/Proyectos/Parser/AnalizadorSintactico/src/codigo/Lexer.flex";
-   //     ruta = "D:/Desktop/CI/Proyectos/Etapa 1/Analizador-Lexico-Compiladores/AnalizadorLexico/src/codigo/Lexer.flex";
-        generar(ruta);
+       String ruta = "C:/Users/liset/OneDrive/Documentos/Ingeniería en Computación/Computación V Semestre/Compiladores e intérpretes/Proyectos/Scanner/AnalizadorLexico/src/codigo/Lexer.flex";
+       ruta = "D:/Desktop/CI/Proyectos/Etapa 1/Analizador-Lexico-Compiladores/AnalizadorLexico/src/codigo/Lexer.flex";
+       generar(ruta);
     }
     
     public static void generar(String ruta){
