@@ -1,0 +1,46 @@
+package codigo;
+import  java_cup.runtime.Symbol;
+
+/*Parser code*/
+parser code
+{:
+    public void syntax_error(Symbol s) {
+        String lexeme = s.value.toString();
+        int row = s.right;
+        int column = s.left;
+        System.out.println("ERROR: " + lexeme + " row: " + row + " column: " + column);
+        /*Guardar el error en una estructura de datos*/
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {        
+        String lexeme = s.value.toString();
+        int row = s.right;
+        int column = s.left;
+        System.out.println("ERROR: " + lexeme + " row: " + row + " column: " + column);
+    }
+:}
+
+
+/* Grammatical action code*/
+action code 
+{:
+:}
+
+/*Synmbol Terminal and No-terminal*/
+/*TERMINALS*/
+terminal incr,decr,equal,add,sub,mul,div,mod,open_bracket,close_bracket,add_equal,sub_equal,mul_equal,div_equal;
+terminal equal_to,greater_equal,less,less_equal,greater,not_equal,logical_or,logical_and,logical_not;
+terminal String literal_str,float_number,octal_number,number,hexadecimal_number,float_point_number,ERROR;
+terminal String i_break,i_case,i_char,i_const,i_continue,i_default,i_do,i_else,i_for,i_if,i_int,i_long,i_return,i_short,i_switch,i_void,i_while;
+terminal String identifier;
+
+/*NON TERMINALS*/
+non terminal String PROGRAM,LIST_EXP;
+
+
+/*Grammatical rules*/
+
+start with PROGRAM;
+
+PROGRAM::=LIST_EXP;
