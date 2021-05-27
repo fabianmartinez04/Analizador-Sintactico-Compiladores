@@ -21,11 +21,9 @@ DecDigit = [0-9]
 HexDigit = (0|-0)(x|X)[0-9A-Fa-f]+
 BinDigit = [0|1]+
 OctDigit = 0[1-7]+
-WhiteSpace = [ \t\r\n]+
+WhiteSpace = [ \t\r\n\f]+
 BackSlash = [\\]
-Operators = ","|";"|"++"|"--"|"=="|">="|">"|"?"|"<="|"<"|"!="|"||"|"&&"|"!"|"="|"+"|"-"|"*"|"/"|"%"|"("|")"|"["|"]"|"{"|"}"|":"|"."|"+="|"-="|"*="|"/="|"&"|"^"|"|"|">>"|"<<"|"~"|"%="|"&="|"^="|"|="|"<<="|">>="|"->"
 Invalid = "ç"|"Ç"|"ñ"|"'"|"Ñ"|"&"|"/"|"%"|"^"|"@"|"'"|"ê"|"«"|"¿"|"¡"|"Ü"|"╝"|"á"|"é"|"í"|"ó"|"ú"|"Á"|"É"|"Í"|"Ó"|"Ú"
-KeyWords = "auto"|"break"|"case"|"char"|"const"|"continue"|"default"|"do"|"double"|"else"|"enum"|"extern"|"float"|"for"|"goto"|"if"|"int"|"long"|"register"|"return"|"short"|"signed"|"sizeof"|"static"|"struct"|"switch"|"typedef"|"union"|"unsigned"|"void"|"volatile"|"while"
 CommentMultiline = "/*" ~"*/"
 Comment = "//".*
 %%
@@ -68,40 +66,38 @@ Comment = "//".*
 /*LITERALS*/
 
 /*Strings*/
-<YYINITIAL> ("\""({BackSlash}|{L}|{DecDigit}|" "|"\t"|"\r"|{Invalid}|{Acentos})*"\"") | ("\'"({BackSlash}|{L}|{DecDigit}|" "|"\t"|"\r"|{Invalid}|{Acentos})*"\'")  { return new Symbol(Sym.literal_str, yycolumn, yyline, yytext()); }
+("\""({BackSlash}|{L}|{DecDigit}|" "|"\t"|"\r"|{Invalid}|{Acentos})*"\"") | ("\'"({BackSlash}|{L}|{DecDigit}|" "|"\t"|"\r"|{Invalid}|{Acentos})*"\'")  { return new Symbol(Sym.literal_str, yycolumn, yyline, yytext()); }
 
 
 /*Numbers*/
 
 /*Flotante con exponente*/
-<YYINITIAL> {DecDigit}+.{DecDigit}+(e|E)(-{DecDigit}+|{DecDigit}+) { return new Symbol(Sym.float_point_number, yycolumn, yyline, yytext()); }
+ {DecDigit}+.{DecDigit}+(e|E)(-{DecDigit}+|{DecDigit}+) { return new Symbol(Sym.float_point_number, yycolumn, yyline, yytext()); }
 
 
 /*Octal number*/
-<YYINITIAL> {OctDigit} {return new Symbol(Sym.octal_number, yycolumn, yyline, yytext()); }
+ {OctDigit} {return new Symbol(Sym.octal_number, yycolumn, yyline, yytext()); }
 
 /*Decimal number*/
-<YYINITIAL> {DecDigit}+|("-"{DecDigit}+) { return new Symbol(Sym.number, yycolumn, yyline, yytext()); }
+ {DecDigit}+|("-"{DecDigit}+) { return new Symbol(Sym.number, yycolumn, yyline, yytext()); }
 
 /*Hexadecimal number*/
-<YYINITIAL> {HexDigit} { return new Symbol(Sym.hexadecimal_number, yycolumn, yyline, yytext()); }
+ {HexDigit} { return new Symbol(Sym.hexadecimal_number, yycolumn, yyline, yytext()); }
 
 
 /*Float number*/
-<YYINITIAL> ({DecDigit}+|{DecDigit}+)"."{DecDigit}+ { return new Symbol(Sym.float_number, yycolumn, yyline, yytext()); }
+ ({DecDigit}+|{DecDigit}+)"."{DecDigit}+ { return new Symbol(Sym.float_number, yycolumn, yyline, yytext()); }
 
 
 /*ERROR*/
-<YYINITIAL> (({DecDigit}|{Invalid}{L})({L}|{DecDigit}|{Invalid})*)|({L}*{Invalid}+{DecDigit}*{L}*)* { return new Symbol(Sym.ERROR, yycolumn, yyline, yytext()); }
+(({DecDigit}|{Invalid}{L})({L}|{DecDigit}|{Invalid})*)|({L}*{Invalid}+{DecDigit}*{L}*)* { System.out.println("ERROR: " + yytext() + " columna: " + yycolumn + " fila: " + yyline); }
 
 /*White Space*/
 {WhiteSpace} {/*Ignore*/}
 
-
-
 /*KeyWords*/
 <YYINITIAL> "break" { return new Symbol(Sym.i_break, yycolumn, yyline, yytext()); }
-<YYINITIAL> "case" { return new Symbol(Sym.i_case., yycolumn, yyline, yytext()); }
+<YYINITIAL> "case" { return new Symbol(Sym.i_case, yycolumn, yyline, yytext()); }
 <YYINITIAL> "char" { return new Symbol(Sym.i_char, yycolumn, yyline, yytext()); }
 <YYINITIAL> "const" { return new Symbol(Sym.i_const, yycolumn, yyline, yytext()); }
 <YYINITIAL> "continue" { return new Symbol(Sym.i_continue, yycolumn, yyline, yytext()); }
@@ -117,10 +113,11 @@ Comment = "//".*
 <YYINITIAL> "switch" { return new Symbol(Sym.i_switch, yycolumn, yyline, yytext()); }
 <YYINITIAL> "void" { return new Symbol(Sym.i_void, yycolumn, yyline, yytext()); }
 <YYINITIAL> "while" { return new Symbol(Sym.i_while, yycolumn, yyline, yytext()); }
+<YYINITIAL> ";" { return new Symbol(Sym.semicolon, yycolumn, yyline, yytext()); }
 
 /*Identifiers*/
-<YYINITIAL> {L}({L}|{DecDigit})* { return new Symbol(Sym.identifier, yycolumn, yyline, yytext()); }
+{L}({L}|{DecDigit})* { return new Symbol(Sym.identifier, yycolumn, yyline, yytext()); }
 
 
 
-. { return new Symbol(Sym.ERROR, yycolumn, yyline, yytext()); }
+[^*] { System.out.println("ERROR:" + yytext() + " columna: " + yycolumn + " fila: " + yyline); }

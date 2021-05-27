@@ -18,7 +18,7 @@ public class Sym {
   public static final int i_short = 45;
   public static final int i_const = 35;
   public static final int not_equal = 21;
-  public static final int identifier = 49;
+  public static final int identifier = 50;
   public static final int i_do = 38;
   public static final int mul_equal = 14;
   public static final int equal_to = 16;
@@ -36,10 +36,10 @@ public class Sym {
   public static final int i_else = 39;
   public static final int div_equal = 15;
   public static final int open_bracket = 10;
-  public static final int ERROR = 31;
   public static final int i_long = 43;
   public static final int greater = 20;
   public static final int literal_str = 25;
+  public static final int binary_number = 31;
   public static final int i_if = 41;
   public static final int float_number = 26;
   public static final int float_point_number = 30;
@@ -54,6 +54,7 @@ public class Sym {
   public static final int div = 8;
   public static final int greater_equal = 17;
   public static final int i_char = 34;
+  public static final int semicolon = 49;
   public static final int i_while = 48;
   public static final int i_int = 42;
   public static final int number = 28;
@@ -90,7 +91,7 @@ public class Sym {
   "number",
   "hexadecimal_number",
   "float_point_number",
-  "ERROR",
+  "binary_number",
   "i_break",
   "i_case",
   "i_char",
@@ -108,6 +109,7 @@ public class Sym {
   "i_switch",
   "i_void",
   "i_while",
+  "semicolon",
   "identifier"
   };
 }

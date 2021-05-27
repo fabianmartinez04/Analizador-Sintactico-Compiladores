@@ -18,6 +18,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java_cup.runtime.Symbol;
 import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
 
@@ -167,28 +168,32 @@ public class frmPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    @SuppressWarnings("empty-statement")
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         // TODO add your handling code here:
-        JFileChooser chooser = new JFileChooser();
-        chooser.showOpenDialog(null);
+        /*JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);*/
 
         try {
-            Reader lector = new BufferedReader(new FileReader(chooser.getSelectedFile()));
+            Reader lector/* = new BufferedReader(new FileReader(chooser.getSelectedFile()))*/;
+            lector = new BufferedReader(new FileReader("D:\\Desktop\\test.c"));
             Lexer lexer = new Lexer(lector);
-            //String resultado = "";
-            int linea = 0;
-            int columna = 0;
+            /*Scanner scanner = new Scanner(lector);
+            Parser parser = new Parser(scanner);
+            try {
+                parser.parse();
+            } catch (Exception e) {
+            };*/
             tabla = new TablaSimbolos();
             String error = "";
             while (true) {
                 TipoToken tokens = lexer.yylex();
-                linea = lexer.row;
-                columna = lexer.column;
-                //System.out.println(linea);
-                System.out.println("Token: " + lexer.lexeme + " Linea: " + lexer.row + " Columna: " + lexer.column + "\n");
+                /*System.out.println(scanner.yytext());
+                scanner.next_token();*/
+                //System.out.println("Token: " + lexer.lexeme + " Linea: " + lexer.row + " Columna: " + lexer.column + "\n");
                 if (tokens == TipoToken.Error || tokens == TipoToken.ERROR) {
                     jtextError.setForeground(Color.red);
-                    error += "Error: Token Invalido: " + lexer.lexeme + " en la linea: " + lexer.row + " columna: " + lexer.column + "\n";
+                    error += "Error: Token Invalido: " + lexer.lexeme + " en la linea: " + (lexer.row + 1) + " columna: " + (lexer.column + 1) + "\n";
                     jtextError.setText(error);
                 } else {
                     if (tokens == null) {
@@ -211,11 +216,10 @@ public class frmPrincipal extends javax.swing.JFrame {
 
                         return;
                     } else {
-                        if(tokens != TipoToken.Error && tokens!= TipoToken.ERROR){
+                        if (tokens != TipoToken.Error && tokens != TipoToken.ERROR) {
                             Token token = new Token(String.valueOf(lexer.lexeme), tokens);
-                            token.lineas.add(linea);
                             // token.columnas.add(columna);
-                            tabla.agregarToken(token, linea,columna);
+                            tabla.agregarToken(token, lexer.row + 1, lexer.column + 1);
                         }
 
                     }
