@@ -40,6 +40,27 @@ non terminal String PROGRAM,LIST_EXP;
 
 
 /*Grammatical rules*/
+<expr> --> number
+<expr> --> ( expr )
+<expr> --> expr + expr
+<expr> --> expr - expr
+<expr> --> expr * expr
+<expr> --> expr / expr
+
+<compound stmt> --> { <stmt list> }
+<stmt list> --> <stmt> <stmt list> | epsilon
+<stmt> --> <compound stmt>
+<stmt> --> id : <stmt>
+<stmt> --> if ( <expr> ) <stmt>
+<stmt> --> if ( <expr> ) <stmt> else <stmt>
+<stmt> --> while ( <expr> ) <stmt>
+<stmt> --> do <stmt> while ( <expr> ) ;
+<stmt> --> for ( <stmt> <expr> ; <expr> ) <stmt>
+<stmt> --> switch (number) { <mult case stmt> }
+<mult case stmt> --> <case stmt> <mult case stmt> | epsilon
+<case stmt> --> case number : <stmt> | default: <stmt>
+<stmt> --> break ; | continue ; | ;
+<stmt> --> return <expr> ; | goto case number ;
 
 start with PROGRAM;
 
