@@ -70,5 +70,5 @@ non terminal String Program,List_exp,Exp,Type_specifier,Decl;
 */
 start with Program;
 
-Program     ::= List_exp;
+Program     ::= i_int identifier semicolon   {:RESULT="Started";:};
 

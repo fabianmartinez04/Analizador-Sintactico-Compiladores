@@ -3,7 +3,7 @@ import java_cup.runtime.*;
 /* User code */
 %%
 %public
-%class Scanner
+%class LexerCup
 %cupsym Sym
 %cup
 %char

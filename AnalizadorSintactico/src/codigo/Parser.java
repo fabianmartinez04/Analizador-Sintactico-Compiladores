@@ -31,7 +31,7 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\002\000\002\002\004\000\002\002\003" });
+    "\000\002\000\002\002\004\000\002\002\005" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -39,8 +39,9 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\004\000\002\001\002\000\004\002\006\001\002\000" +
-    "\004\002\000\001\002\000\004\002\001\001\002" });
+    "\000\006\000\004\054\005\001\002\000\004\002\010\001" +
+    "\002\000\004\064\006\001\002\000\004\063\007\001\002" +
+    "\000\004\002\000\001\002\000\004\002\001\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -48,8 +49,9 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\004\000\006\002\003\003\004\001\001\000\002\001" +
-    "\001\000\002\001\001\000\002\001\001" });
+    "\000\006\000\004\002\003\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -147,11 +149,11 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 1: // Program ::= List_exp 
+          case 1: // Program ::= i_int identifier semicolon 
             {
               String RESULT =null;
-
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("Program",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+		RESULT="Started";
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("Program",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 

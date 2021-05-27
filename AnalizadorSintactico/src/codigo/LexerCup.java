@@ -9,7 +9,7 @@ import java_cup.runtime.*;
  * <a href="http://www.jflex.de/">JFlex</a> 1.6.1
  * from the specification file <tt>Scanner.flex</tt>
  */
-public class Scanner implements java_cup.runtime.Scanner {
+public class LexerCup implements java_cup.runtime.Scanner {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
@@ -570,7 +570,7 @@ public class Scanner implements java_cup.runtime.Scanner {
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  public Scanner(java.io.Reader in) {
+  public LexerCup(java.io.Reader in) {
     this.zzReader = in;
   }
 
