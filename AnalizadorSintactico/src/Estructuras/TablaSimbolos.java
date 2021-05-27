@@ -86,8 +86,6 @@ public class TablaSimbolos {
             for (int j=0;j<tabla.get(llaves.get(i)).cantidadColumnas();j++){
                 columna = tabla.get(llaves.get(i)).obtenerColumna(j);
                 if(Collections.frequency(tabla.get(llaves.get(i)).getColumnas(),columna) > 1 && !columnasEncontradas.contains(columna)){
-                    System.err.println(tabla.get(llaves.get(i)).getColumnas());
-                    System.err.println(columna);
                     columns +=  String.valueOf(columna) + "(" + String.valueOf(Collections.frequency(tabla.get(llaves.get(i)).getColumnas(),columna))+"),";
                     columnasEncontradas.add(columna);
                 }
