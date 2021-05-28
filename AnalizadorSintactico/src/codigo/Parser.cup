@@ -29,14 +29,38 @@ action code
 
 /*Synmbol Terminal and No-terminal*/
 /*TERMINALS*/
-terminal incr,decr,equal,add,sub,mul,div,mod,open_bracket,close_bracket,add_equal,sub_equal,mul_equal,div_equal;
-terminal equal_to,greater_equal,less,less_equal,greater,not_equal,logical_or,logical_and,logical_not;
-terminal String literal_str,float_number,octal_number,number,hexadecimal_number,float_point_number,binary_number;
-terminal String i_break,i_case,i_char,i_const,i_continue,i_default,i_do,i_else,i_for,i_if,i_int,i_long,i_return,i_short,i_switch,i_void,i_while;
-terminal String semicolon,identifier;
+terminal INCR,DECR,EQUAL,ADD,SUB,MUL,DIV,MOD,OPEN_BRACKET,CLOSE_BRACKET,ADD_EQUAL,SUB_EQUAL,MUL_EQUAL,DIV_EQUAL;
+terminal EQUAL_TO,GREATER_EQUAL,LESS,LESS_EQUAL,GREATER,NOT_EQUAL,LOGICAL_OR,LOGICAL_AND,LOGICAL_NOT;
+terminal String LITERAL_STR,FLOAT_NUMBER,OCTAL_NUMBER,NUMBER,HEXADECIMAL_NUMBER,FLOAT_POINT_NUMBER,BINARY_NUMBER;
+terminal String I_BREAK,I_CASE,I_CHAR,I_CONST,I_CONTINUE,I_DEFAULT,I_DO,I_ELSE,I_FOR,I_IF,I_INT,I_LONG,I_RETURN,I_SHORT,I_SWITCH,I_VOID,I_WHILE;
+terminal String SEMICOLON, COMMA, IDENTIFIER;
 
 /*NON TERMINALS*/
-non terminal String Program,List_exp,Exp,Type_specifier,Decl;
+non terminal String program, exp_list, exp, data_type, value, str;
+
+start with program;
+
+program     ::= exp_list:el                              {: RESULT= el; :}
+;
+exp_list    ::= exp: e exp_list:el                       {: RESULT= el; :}
+                | exp:e                                  {: RESULT= e; :}
+;
+exp         ::= data_type:t IDENTIFIER:id SEMICOLON      {: RESULT= t + " " + id + " ;"; :}
+                | data_type:t IDENTIFIER:id EQUAL value:v SEMICOLON      {: RESULT= t + " " + id + " = " + v + " ;"; :}
+                
+;
+data_type   ::= I_CHAR:e                                 {: RESULT= e; :}
+                | I_INT:e                                {: RESULT= e; :}
+                | I_LONG:e                               {: RESULT= e; :}
+                | I_SHORT:e                              {: RESULT= e; :}
+;
+value       ::= NUMBER:e                                 {: RESULT= e; :}
+                | LITERAL_STR:e                          {: RESULT= e; :}
+;
+
+
+
+
 
 
 /*Grammatical rules*/
@@ -63,12 +87,3 @@ non terminal String Program,List_exp,Exp,Type_specifier,Decl;
 <stmt> --> break ; | continue ; | ;
 <stmt> --> return <expr> ; | goto case number ;
 */
-
-/*
-    Function ::= Type_specifier identifier open_bracket Decl close_bracket;
-
-*/
-start with Program;
-
-Program     ::= i_int identifier semicolon   {:RESULT="Started";:};
-

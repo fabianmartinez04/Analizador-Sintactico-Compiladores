@@ -8,109 +8,111 @@ package codigo;
 /** CUP generated class containing symbol constants. */
 public class Sym {
   /* terminals */
-  public static final int i_case = 33;
-  public static final int i_for = 40;
-  public static final int mul = 7;
-  public static final int add = 5;
-  public static final int mod = 9;
-  public static final int octal_number = 27;
-  public static final int less_equal = 19;
-  public static final int i_short = 45;
-  public static final int i_const = 35;
-  public static final int not_equal = 21;
-  public static final int identifier = 50;
-  public static final int i_do = 38;
-  public static final int mul_equal = 14;
-  public static final int equal_to = 16;
-  public static final int i_return = 44;
-  public static final int hexadecimal_number = 29;
-  public static final int equal = 4;
-  public static final int i_default = 37;
-  public static final int i_void = 47;
-  public static final int i_continue = 36;
-  public static final int sub = 6;
+  public static final int NOT_EQUAL = 21;
+  public static final int MUL_EQUAL = 14;
+  public static final int GREATER = 20;
+  public static final int DECR = 3;
+  public static final int INCR = 2;
+  public static final int I_INT = 42;
+  public static final int LESS = 18;
+  public static final int I_SHORT = 45;
+  public static final int I_FOR = 40;
+  public static final int SEMICOLON = 49;
+  public static final int I_VOID = 47;
+  public static final int I_DEFAULT = 37;
+  public static final int I_CONST = 35;
+  public static final int COMMA = 50;
+  public static final int I_ELSE = 39;
+  public static final int DIV = 8;
+  public static final int FLOAT_NUMBER = 26;
+  public static final int I_IF = 41;
+  public static final int LESS_EQUAL = 19;
+  public static final int DIV_EQUAL = 15;
+  public static final int I_RETURN = 44;
+  public static final int FLOAT_POINT_NUMBER = 30;
   public static final int EOF = 0;
-  public static final int logical_or = 22;
-  public static final int i_switch = 46;
+  public static final int EQUAL = 4;
+  public static final int LOGICAL_OR = 22;
+  public static final int GREATER_EQUAL = 17;
+  public static final int I_LONG = 43;
   public static final int error = 1;
-  public static final int i_else = 39;
-  public static final int div_equal = 15;
-  public static final int open_bracket = 10;
-  public static final int i_long = 43;
-  public static final int greater = 20;
-  public static final int literal_str = 25;
-  public static final int binary_number = 31;
-  public static final int i_if = 41;
-  public static final int float_number = 26;
-  public static final int float_point_number = 30;
-  public static final int i_break = 32;
-  public static final int sub_equal = 13;
-  public static final int add_equal = 12;
-  public static final int decr = 3;
-  public static final int incr = 2;
-  public static final int logical_and = 23;
-  public static final int logical_not = 24;
-  public static final int less = 18;
-  public static final int div = 8;
-  public static final int greater_equal = 17;
-  public static final int i_char = 34;
-  public static final int semicolon = 49;
-  public static final int i_while = 48;
-  public static final int i_int = 42;
-  public static final int number = 28;
-  public static final int close_bracket = 11;
+  public static final int MUL = 7;
+  public static final int ADD = 5;
+  public static final int I_SWITCH = 46;
+  public static final int NUMBER = 28;
+  public static final int LITERAL_STR = 25;
+  public static final int MOD = 9;
+  public static final int CLOSE_BRACKET = 11;
+  public static final int OPEN_BRACKET = 10;
+  public static final int HEXADECIMAL_NUMBER = 29;
+  public static final int EQUAL_TO = 16;
+  public static final int SUB_EQUAL = 13;
+  public static final int ADD_EQUAL = 12;
+  public static final int OCTAL_NUMBER = 27;
+  public static final int I_CHAR = 34;
+  public static final int LOGICAL_NOT = 24;
+  public static final int LOGICAL_AND = 23;
+  public static final int I_CONTINUE = 36;
+  public static final int I_BREAK = 32;
+  public static final int I_CASE = 33;
+  public static final int BINARY_NUMBER = 31;
+  public static final int I_DO = 38;
+  public static final int SUB = 6;
+  public static final int I_WHILE = 48;
+  public static final int IDENTIFIER = 51;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "incr",
-  "decr",
-  "equal",
-  "add",
-  "sub",
-  "mul",
-  "div",
-  "mod",
-  "open_bracket",
-  "close_bracket",
-  "add_equal",
-  "sub_equal",
-  "mul_equal",
-  "div_equal",
-  "equal_to",
-  "greater_equal",
-  "less",
-  "less_equal",
-  "greater",
-  "not_equal",
-  "logical_or",
-  "logical_and",
-  "logical_not",
-  "literal_str",
-  "float_number",
-  "octal_number",
-  "number",
-  "hexadecimal_number",
-  "float_point_number",
-  "binary_number",
-  "i_break",
-  "i_case",
-  "i_char",
-  "i_const",
-  "i_continue",
-  "i_default",
-  "i_do",
-  "i_else",
-  "i_for",
-  "i_if",
-  "i_int",
-  "i_long",
-  "i_return",
-  "i_short",
-  "i_switch",
-  "i_void",
-  "i_while",
-  "semicolon",
-  "identifier"
+  "INCR",
+  "DECR",
+  "EQUAL",
+  "ADD",
+  "SUB",
+  "MUL",
+  "DIV",
+  "MOD",
+  "OPEN_BRACKET",
+  "CLOSE_BRACKET",
+  "ADD_EQUAL",
+  "SUB_EQUAL",
+  "MUL_EQUAL",
+  "DIV_EQUAL",
+  "EQUAL_TO",
+  "GREATER_EQUAL",
+  "LESS",
+  "LESS_EQUAL",
+  "GREATER",
+  "NOT_EQUAL",
+  "LOGICAL_OR",
+  "LOGICAL_AND",
+  "LOGICAL_NOT",
+  "LITERAL_STR",
+  "FLOAT_NUMBER",
+  "OCTAL_NUMBER",
+  "NUMBER",
+  "HEXADECIMAL_NUMBER",
+  "FLOAT_POINT_NUMBER",
+  "BINARY_NUMBER",
+  "I_BREAK",
+  "I_CASE",
+  "I_CHAR",
+  "I_CONST",
+  "I_CONTINUE",
+  "I_DEFAULT",
+  "I_DO",
+  "I_ELSE",
+  "I_FOR",
+  "I_IF",
+  "I_INT",
+  "I_LONG",
+  "I_RETURN",
+  "I_SHORT",
+  "I_SWITCH",
+  "I_VOID",
+  "I_WHILE",
+  "SEMICOLON",
+  "COMMA",
+  "IDENTIFIER"
   };
 }
 
