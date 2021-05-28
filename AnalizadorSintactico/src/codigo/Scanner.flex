@@ -46,6 +46,8 @@ Comment = "//".*
 <YYINITIAL> "-=" { return new Symbol(Sym.SUB_EQUAL, yycolumn, yyline, yytext()); }
 <YYINITIAL> "*=" { return new Symbol(Sym.MUL_EQUAL, yycolumn, yyline, yytext()); }
 <YYINITIAL> "/=" { return new Symbol(Sym.DIV_EQUAL, yycolumn, yyline, yytext()); }
+<YYINITIAL> "{" { return new Symbol(Sym.OPEN_KEY, yycolumn, yyline, yytext()); }
+<YYINITIAL> "}" { return new Symbol(Sym.CLOSE_KEY, yycolumn, yyline, yytext()); }
 
 /*Logical Operators*/
 <YYINITIAL> "==" { return new Symbol(Sym.EQUAL_TO, yycolumn, yyline, yytext()); }
