@@ -47,6 +47,7 @@ exp_list    ::= exp: e exp_list:el                       {: RESULT= el; :}
 ;
 exp         ::= data_type:t IDENTIFIER:id SEMICOLON      {: RESULT= t + " " + id + " ;"; :}
                 | data_type:t IDENTIFIER:id EQUAL value:v SEMICOLON      {: RESULT= t + " " + id + " = " + v + " ;"; :}
+                | I_SWITCH:s OPEN_BRACKET:ob NUMBER:n CLOSE_BRACKET:cb   {: RESULT = s + ob + n + cb ; :}
                 
 ;
 data_type   ::= I_CHAR:e                                 {: RESULT= e; :}
