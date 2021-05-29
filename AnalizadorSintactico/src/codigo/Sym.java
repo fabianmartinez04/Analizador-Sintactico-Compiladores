@@ -29,8 +29,10 @@ public class Sym {
   public static final int LESS_EQUAL = 19;
   public static final int DIV_EQUAL = 15;
   public static final int I_RETURN = 44;
-  public static final int FLOAT_POINT_NUMBER = 30;
+  public static final int FLOAT_POINT_NUMBER = 27;
   public static final int EOF = 0;
+  public static final int CLOSE_KEY = 53;
+  public static final int OPEN_KEY = 52;
   public static final int EQUAL = 4;
   public static final int LOGICAL_OR = 22;
   public static final int GREATER_EQUAL = 17;
@@ -39,16 +41,16 @@ public class Sym {
   public static final int MUL = 7;
   public static final int ADD = 5;
   public static final int I_SWITCH = 46;
-  public static final int NUMBER = 28;
+  public static final int NUMBER = 29;
   public static final int LITERAL_STR = 25;
   public static final int MOD = 9;
   public static final int CLOSE_BRACKET = 11;
   public static final int OPEN_BRACKET = 10;
-  public static final int HEXADECIMAL_NUMBER = 29;
+  public static final int HEXADECIMAL_NUMBER = 30;
   public static final int EQUAL_TO = 16;
   public static final int SUB_EQUAL = 13;
   public static final int ADD_EQUAL = 12;
-  public static final int OCTAL_NUMBER = 27;
+  public static final int OCTAL_NUMBER = 28;
   public static final int I_CHAR = 34;
   public static final int LOGICAL_NOT = 24;
   public static final int LOGICAL_AND = 23;
@@ -88,10 +90,10 @@ public class Sym {
   "LOGICAL_NOT",
   "LITERAL_STR",
   "FLOAT_NUMBER",
+  "FLOAT_POINT_NUMBER",
   "OCTAL_NUMBER",
   "NUMBER",
   "HEXADECIMAL_NUMBER",
-  "FLOAT_POINT_NUMBER",
   "BINARY_NUMBER",
   "I_BREAK",
   "I_CASE",
@@ -112,7 +114,9 @@ public class Sym {
   "I_WHILE",
   "SEMICOLON",
   "COMMA",
-  "IDENTIFIER"
+  "IDENTIFIER",
+  "OPEN_KEY",
+  "CLOSE_KEY"
   };
 }
 

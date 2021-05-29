@@ -6,18 +6,9 @@ parser code
 {:
     public void syntax_error(Symbol s) {
         String lexeme = s.value.toString();
-        int row = s.right;
-        int column = s.left;
-        System.out.println("ERROR-1: " + lexeme + " row: " + row + " column: " + column);
-        /*Guardar el error en una estructura de datos*/
-    }
-
-    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
-    {        
-        String lexeme = s.value.toString();
-        int row = s.right;
-        int column = s.left;
-        System.out.println("ERROR-2: " + lexeme + " row: " + row + " column: " + column);
+        int row =  s.right + 1;
+        int column = s.left + 1 ;
+        System.out.println("Syntax error: " + lexeme + " at: " + row + ":" + column);
     }
 :}
 
@@ -31,30 +22,42 @@ action code
 /*TERMINALS*/
 terminal String INCR,DECR,EQUAL,ADD,SUB,MUL,DIV,MOD,OPEN_BRACKET,CLOSE_BRACKET,ADD_EQUAL,SUB_EQUAL,MUL_EQUAL,DIV_EQUAL;
 terminal String EQUAL_TO,GREATER_EQUAL,LESS,LESS_EQUAL,GREATER,NOT_EQUAL,LOGICAL_OR,LOGICAL_AND,LOGICAL_NOT;
-terminal String LITERAL_STR,FLOAT_NUMBER,FLOAT_POINT_NUMBER,BINARY_NUMBER;
+terminal String LITERAL_STR,FLOAT_NUMBER,FLOAT_POINT_NUMBER;
 terminal Integer OCTAL_NUMBER,NUMBER,HEXADECIMAL_NUMBER,BINARY_NUMBER;
 terminal String I_BREAK,I_CASE,I_CHAR,I_CONST,I_CONTINUE,I_DEFAULT,I_DO,I_ELSE,I_FOR,I_IF,I_INT,I_LONG,I_RETURN,I_SHORT,I_SWITCH,I_VOID,I_WHILE;
-terminal String SEMICOLON, COMMA, IDENTIFIER;
+terminal String SEMICOLON, COMMA, IDENTIFIER, OPEN_KEY, CLOSE_KEY;
 
-/*NON TERMINALS*/
-non terminal String program;
+/* NON TERMINALS */
+non terminal String program, global_list, const_list, funct_list, var_type, var_asign, var_decl_list;
+non terminal String literal;
 
 start with program;
 
-program ::= global_list:gl funct_list:fl
-    | const_list:cl funct_list:fl
-    | funct_list:fl
+program ::= global_list:gl program:p
+    | const_list:cl program:p //funct_list:fl
+//    | funct_list:fl program:p
 ;
-global_list ::= global:g global_list:gl 
-    | global:g
+global_list ::= var_type:vt var_decl_list:vdl SEMICOLON
 ;
-global  ::= var_def_list:vdl
+var_decl_list   ::= IDENTIFIER EQUAL literal:l COMMA var_decl_list:vd
+    | IDENTIFIER:i COMMA var_decl_list:vd
+    | IDENTIFIER:i EQUAL literal:l                                        {: System.out.print(i + "=" + l); :}
+    | IDENTIFIER:i                                                        {: System.out.print(i); :}
 ;
-const_list  ::= const_def:cd const_list:cl
-    | const_def:cd
+var_type    ::=  I_SHORT:i
+    | I_LONG:i
+    | I_CHAR:i
+    | I_INT:i
 ;
-const_def   ::= I_CONST var_def:vd
+literal	::= NUMBER:n
+	| OCTAL_NUMBER:n
+	| HEXADECIMAL_NUMBER:n
+	| LITERAL_STR:s
+	| BINARY_NUMBER:n
 ;
+const_list  ::= I_CONST var_type:vt var_decl_list:vdl SEMICOLON
+;
+/*
 funct_list  ::= function function_list:fl
     | function:f
 ;
@@ -64,33 +67,33 @@ function_type   ::= I_SHORT
     | I_LONG
     | I_CHAR
     | I_INT
+    | I_VOID
 ;
 var_def_function_list   ::= var_def_function:vdf COMMA var_def_function_list:vdfl
-    | var_def_function:vdf /*puede no tener parametros agregar vació*/
+    | var_def_function:vdf //puede no tener parametros agregar vació
 ;
-var_def_function    ::= var_type:vt IDENTIFER
-;
-decl_list   :=  OPEN_KEY 
+var_def_function    ::= var_type:vt IDENTIFIER
+;  
+decl_list   ::=  OPEN_KEY  CLOSE_KEY
+*/
 
 
-
-
-/*::= exp_list:el                              {: RESULT= el; :}
+/*::= exp_list:el                                       {: RESULT= el; :}
 ;
-exp_list    ::= exp: e exp_list:el                       {: RESULT= el; :}
-                | exp:e                                  {: RESULT= e; :}
+exp_list    ::= exp: e exp_list:el                      {: RESULT= el; :}
+                | exp:e                                 {: RESULT= e; :}
 ;
-exp         ::= data_type:t IDENTIFIER:id SEMICOLON      {: RESULT= t + " " + id + " ;"; :}
-                | data_type:t IDENTIFIER:id EQUAL value:v SEMICOLON      {: RESULT= t + " " + id + " = " + v + " ;"; :}
+exp         ::= data_type:t IDENTIFIER:id SEMICOLON     {: RESULT= t + " " + id + " ;"; :}
+                | data_type:t IDENTIFIER:id EQUAL value:v SEMICOLON     {: RESULT= t + " " + id + " = " + v + " ;"; :}
                 
 ;
-data_type   ::= I_CHAR:e                                 {: RESULT= e; :}
-                | I_INT:e                                {: RESULT= e; :}
-                | I_LONG:e                               {: RESULT= e; :}
-                | I_SHORT:e                              {: RESULT= e; :}
+data_type   ::= I_CHAR:e                                {: RESULT= e; :}
+                | I_INT:e                               {: RESULT= e; :}
+                | I_LONG:e                              {: RESULT= e; :}
+                | I_SHORT:e                             {: RESULT= e; :}
 ;
-value       ::= NUMBER:e                                 {: RESULT= e; :}
-                | LITERAL_STR:e                          {: RESULT= e; :}
+value       ::= NUMBER:e                                {: RESULT= e; :}
+                | LITERAL_STR:e                         {: RESULT= e; :}
 ;
 */
 

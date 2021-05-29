@@ -178,11 +178,10 @@ public class frmPrincipal extends javax.swing.JFrame {
             Reader lector/* = new BufferedReader(new FileReader(chooser.getSelectedFile()))*/;
             lector = new BufferedReader(new FileReader("D:\\Desktop\\test.c"));
             Reader file = new BufferedReader(new FileReader("D:\\Desktop\\test.c"));
-            Lexer lexer = new Lexer(lector);
             LexerCup scanner = new LexerCup(file);
-            Parser parser = new Parser(scanner);
-            Symbol s = parser.parse();
-            System.out.println(s.value);
+            Lexer lexer = new Lexer(lector);
+            Parser parser;
+            Symbol s = new Symbol(SOMEBITS);
             tabla = new TablaSimbolos();
             String error = "";
             while (true) {
@@ -213,7 +212,7 @@ public class frmPrincipal extends javax.swing.JFrame {
                             tableModel.addRow(t.get(index));
                         }
 
-                        return;
+                        break;
                     } else {
                         if (tokens != TipoToken.Error && tokens != TipoToken.ERROR) {
                             Token token = new Token(String.valueOf(lexer.lexeme), tokens);
@@ -224,15 +223,16 @@ public class frmPrincipal extends javax.swing.JFrame {
                     }
                 }
             }
+            try {
+                parser = new Parser(scanner);
+                s = parser.parse();
+            }catch(Exception ex) {            }
+            System.err.println(s.parse_state);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(frmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(frmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(frmPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
     /**
