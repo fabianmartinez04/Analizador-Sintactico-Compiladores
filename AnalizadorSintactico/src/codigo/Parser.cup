@@ -23,104 +23,42 @@ action code
 terminal String INCR,DECR,EQUAL,ADD,SUB,MUL,DIV,MOD,OPEN_BRACKET,CLOSE_BRACKET,ADD_EQUAL,SUB_EQUAL,MUL_EQUAL,DIV_EQUAL;
 terminal String EQUAL_TO,GREATER_EQUAL,LESS,LESS_EQUAL,GREATER,NOT_EQUAL,LOGICAL_OR,LOGICAL_AND,LOGICAL_NOT;
 terminal String LITERAL_STR,FLOAT_NUMBER,FLOAT_POINT_NUMBER;
-terminal Integer OCTAL_NUMBER,NUMBER,HEXADECIMAL_NUMBER,BINARY_NUMBER;
+terminal String OCTAL_NUMBER,NUMBER,HEXADECIMAL_NUMBER,BINARY_NUMBER;
 terminal String I_BREAK,I_CASE,I_CHAR,I_CONST,I_CONTINUE,I_DEFAULT,I_DO,I_ELSE,I_FOR,I_IF,I_INT,I_LONG,I_RETURN,I_SHORT,I_SWITCH,I_VOID,I_WHILE;
 terminal String SEMICOLON, COMMA, IDENTIFIER, OPEN_KEY, CLOSE_KEY;
 
 /* NON TERMINALS */
-non terminal String program, global_list, const_list, funct_list, var_type, var_asign, var_decl_list;
-non terminal String literal;
+non terminal String program, decl_list, global_decl, const_decl, funct_decl, var_type, var_asign, var_decl;
+non terminal String literal, declaration;
 
 start with program;
 
-program ::= global_list:gl program:p
-    | const_list:cl program:p //funct_list:fl
-//    | funct_list:fl program:p
+program ::= decl_list:dl
 ;
-global_list ::= var_type:vt var_decl_list:vdl SEMICOLON
+decl_list ::= declaration:d decl_list:dl
+    | declaration:d
 ;
-var_decl_list   ::= IDENTIFIER EQUAL literal:l COMMA var_decl_list:vd
-    | IDENTIFIER:i COMMA var_decl_list:vd
-    | IDENTIFIER:i EQUAL literal:l                                        {: System.out.print(i + "=" + l); :}
-    | IDENTIFIER:i                                                        {: System.out.print(i); :}
+declaration ::= global_decl:gl
+    | const_decl:cl
+    | funct_decl:fl
 ;
-var_type    ::=  I_SHORT:i
+global_decl ::= var_type:vt var_decl:vd SEMICOLON
+;
+var_decl   ::= IDENTIFIER:i EQUAL literal:l
+    | IDENTIFIER:i
+    | IDENTIFIER:i EQUAL literal:l COMMA var_decl:vd
+    | IDENTIFIER:i COMMA var_decl:vd
+;
+var_type ::=  I_SHORT:i
     | I_LONG:i
     | I_CHAR:i
     | I_INT:i
 ;
 literal	::= NUMBER:n
-	| OCTAL_NUMBER:n
-	| HEXADECIMAL_NUMBER:n
-	| LITERAL_STR:s
-	| BINARY_NUMBER:n
+    | LITERAL_STR:s
+    | OCTAL_NUMBER:n
+    | HEXADECIMAL_NUMBER:n
+    | BINARY_NUMBER:n
 ;
-const_list  ::= I_CONST var_type:vt var_decl_list:vdl SEMICOLON
+const_decl  ::= I_CONST var_type:vt var_decl:vd SEMICOLON
 ;
-/*
-funct_list  ::= function function_list:fl
-    | function:f
-;
-function    ::= function_type:ft IDENTIFIER OPEN_BRACKET var_def_function_list:vdfl CLOSE_BRACKET decl_list:dl
-;
-function_type   ::= I_SHORT
-    | I_LONG
-    | I_CHAR
-    | I_INT
-    | I_VOID
-;
-var_def_function_list   ::= var_def_function:vdf COMMA var_def_function_list:vdfl
-    | var_def_function:vdf //puede no tener parametros agregar vació
-;
-var_def_function    ::= var_type:vt IDENTIFIER
-;  
-decl_list   ::=  OPEN_KEY  CLOSE_KEY
-*/
-
-
-/*::= exp_list:el                                       {: RESULT= el; :}
-;
-exp_list    ::= exp: e exp_list:el                      {: RESULT= el; :}
-                | exp:e                                 {: RESULT= e; :}
-;
-exp         ::= data_type:t IDENTIFIER:id SEMICOLON     {: RESULT= t + " " + id + " ;"; :}
-                | data_type:t IDENTIFIER:id EQUAL value:v SEMICOLON     {: RESULT= t + " " + id + " = " + v + " ;"; :}
-                
-;
-data_type   ::= I_CHAR:e                                {: RESULT= e; :}
-                | I_INT:e                               {: RESULT= e; :}
-                | I_LONG:e                              {: RESULT= e; :}
-                | I_SHORT:e                             {: RESULT= e; :}
-;
-value       ::= NUMBER:e                                {: RESULT= e; :}
-                | LITERAL_STR:e                         {: RESULT= e; :}
-;
-*/
-
-
-
-
-/*Grammatical rules*/
-/*
-<expr> --> number
-<expr> --> ( expr )
-<expr> --> expr + expr
-<expr> --> expr - expr
-<expr> --> expr * expr
-<expr> --> expr / expr
-
-<compound stmt> --> { <stmt list> }
-<stmt list> --> <stmt> <stmt list> | epsilon
-<stmt> --> <compound stmt>
-<stmt> --> id : <stmt>
-<stmt> --> if ( <expr> ) <stmt>
-<stmt> --> if ( <expr> ) <stmt> else <stmt>
-<stmt> --> while ( <expr> ) <stmt>
-<stmt> --> do <stmt> while ( <expr> ) ;
-<stmt> --> for ( <stmt> <expr> ; <expr> ) <stmt>
-<stmt> --> switch (number) { <mult case stmt> }
-<mult case stmt> --> <case stmt> <mult case stmt> | epsilon
-<case stmt> --> case number : <stmt> | default: <stmt>
-<stmt> --> break ; | continue ; | ;
-<stmt> --> return <expr> ; | goto case number ;
-*/

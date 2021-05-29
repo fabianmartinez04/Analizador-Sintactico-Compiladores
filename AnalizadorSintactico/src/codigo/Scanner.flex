@@ -74,7 +74,7 @@ Comment = "//".*
 /*Numbers*/
 
 /*Flotante con exponente*/
- {DecDigit}+.{DecDigit}+(e|E)(-{DecDigit}+|{DecDigit}+) { return new Symbol(Sym.FLOAT_POINT_NUMBER, yycolumn, yyline, yytext()); }
+// {DecDigit}+.{DecDigit}+(e|E)(-{DecDigit}+|{DecDigit}+) { return new Symbol(Sym.FLOAT_POINT_NUMBER, yycolumn, yyline, yytext()); }
 
 
 /*Octal number*/
@@ -88,7 +88,7 @@ Comment = "//".*
 
 
 /*Float number*/
- ({DecDigit}+|{DecDigit}+)"."{DecDigit}+ { return new Symbol(Sym.FLOAT_NUMBER, yycolumn, yyline, yytext()); }
+// ({DecDigit}+|{DecDigit}+)"."{DecDigit}+ { return new Symbol(Sym.FLOAT_NUMBER, yycolumn, yyline, yytext()); }
 
 
 /*ERROR*/
@@ -119,7 +119,7 @@ Comment = "//".*
 <YYINITIAL> "," { return new Symbol(Sym.COMMA, yycolumn, yyline, yytext()); }
 
 /*Identifiers*/
-{L}({L}|{DecDigit})* { return new Symbol(Sym.IDENTIFIER, yycolumn, yyline, yytext()); }
+{L}({L}|{DecDigit})* { System.out.println(); return new Symbol(Sym.IDENTIFIER, yycolumn, yyline, yytext()); }
 
 
 
