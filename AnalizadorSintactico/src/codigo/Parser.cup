@@ -36,16 +36,18 @@ action code
 
 /*Synmbol Terminal and No-terminal*/
 /*TERMINALS*/
-terminal String INCR,DECR,EQUAL,ADD,SUB,MUL,DIV,MOD,OPEN_BRACKET,CLOSE_BRACKET,ADD_EQUAL,SUB_EQUAL,MUL_EQUAL,DIV_EQUAL;
-terminal String EQUAL_TO,GREATER_EQUAL,LESS,LESS_EQUAL,GREATER,NOT_EQUAL,LOGICAL_OR,LOGICAL_AND,LOGICAL_NOT;
-terminal String LITERAL_STR,FLOAT_NUMBER,FLOAT_POINT_NUMBER;
-terminal String OCTAL_NUMBER,NUMBER,HEXADECIMAL_NUMBER,BINARY_NUMBER;
-terminal String I_BREAK,I_CASE,I_CHAR,I_CONST,I_CONTINUE,I_DEFAULT,I_DO,I_ELSE,I_FOR,I_IF,I_INT,I_LONG,I_RETURN,I_SHORT,I_SWITCH,I_VOID,I_WHILE;
-terminal String SEMICOLON, COMMA, IDENTIFIER, OPEN_KEY, CLOSE_KEY;
+terminal String INCR, DECR, EQUAL, ADD, SUB, MUL, DIV, MOD;
+terminal String OPEN_BRACKET, CLOSE_BRACKET, ADD_EQUAL, SUB_EQUAL, MUL_EQUAL, DIV_EQUAL, OPEN_KEY, CLOSE_KEY;
+terminal String EQUAL_TO, GREATER_EQUAL, LESS, LESS_EQUAL, GREATER, NOT_EQUAL, LOGICAL_OR, LOGICAL_AND, LOGICAL_NOT;
+terminal String LITERAL_STR, FLOAT_NUMBER, FLOAT_POINT_NUMBER;
+terminal String OCTAL_NUMBER, NUMBER, HEXADECIMAL_NUMBER, BINARY_NUMBER;
+terminal String I_BREAK, I_CASE, I_CHAR, I_CONST, I_CONTINUE, I_DEFAULT, I_DO, I_ELSE, I_FOR, I_IF, I_INT, I_LONG;
+terminal String I_RETURN, I_SHORT, I_SWITCH, I_VOID, I_WHILE;
+terminal String SEMICOLON, COMMA, IDENTIFIER;
 
 /* NON TERMINALS */
-non terminal String program, decl_list, global_decl, const_decl, funct_decl, var_type, var_decl;
-non terminal String literal, declaration, type_function, var_func_decl_list, stmts, var_func_decl;
+non terminal String program, decl_list, global_decl, const_decl, funct_decl, var_type, var_decl, functin_init;
+non terminal String literal, declaration, var_func_decl_list, stmts, var_func_decl;
 
 start with program;
 
@@ -55,8 +57,8 @@ decl_list ::= declaration:d decl_list:dl
     | declaration:d
 ;
 declaration ::= global_decl:gl
-    | const_decl:cl
-    | funct_decl:fl
+    | const_decl:cl 
+    | funct_decl:fl 
     | error SEMICOLON
     | error OPEN_KEY
     | error CLOSE_KEY
@@ -64,17 +66,20 @@ declaration ::= global_decl:gl
     | error CLOSE_BRACKET
     | error IDENTIFIER
 ;
-global_decl ::= var_type:vt var_decl:vd SEMICOLON
-;
-var_decl   ::= IDENTIFIER:i EQUAL literal:l
-    | IDENTIFIER:i
-    | IDENTIFIER:i EQUAL literal:l COMMA var_decl:vd
-    | IDENTIFIER:i COMMA var_decl:vd
+global_decl ::= var_func_decl COMMA var_decl:vd SEMICOLON
+    | var_func_decl EQUAL literal:l COMMA var_decl:vd SEMICOLON
+    | var_func_decl SEMICOLON
+    | var_func_decl EQUAL literal:l SEMICOLON
 ;
 var_type ::=  I_SHORT:i
     | I_LONG:i
     | I_CHAR:i
     | I_INT:i
+;
+var_decl   ::= IDENTIFIER:i EQUAL literal:l
+    | IDENTIFIER:i
+    | IDENTIFIER:i EQUAL literal:l COMMA var_decl:vd
+    | IDENTIFIER:i COMMA var_decl:vd
 ;
 literal	::= NUMBER:n
     | LITERAL_STR:s
@@ -84,13 +89,10 @@ literal	::= NUMBER:n
 ;
 const_decl  ::= I_CONST var_type:vt var_decl:vd SEMICOLON
 ;
-funct_decl ::= type_function:ft IDENTIFIER:i OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck
+funct_decl ::= functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck
 ;
-function_type   ::= I_SHORT:i
-    | I_LONG:i
-    | I_CHAR:i
-    | I_INT:i
-    | I_VOID:i
+functin_init   ::= var_func_decl:cfd
+    | I_VOID:i IDENTIFIER:id
 ;
 var_func_decl_list   ::= var_func_decl:vfd COMMA var_func_decl_list:vfdl
     | var_func_decl:vfd
@@ -98,5 +100,5 @@ var_func_decl_list   ::= var_func_decl:vfd COMMA var_func_decl_list:vfdl
 var_func_decl ::= var_type:vt IDENTIFIER:i
 ;
 stmts    ::= var_type:vt var_decl:vd SEMICOLON stmts:s
-    | var_type:vt var_decl:vd
+    | var_type:vt var_decl:vd SEMICOLON
 ;

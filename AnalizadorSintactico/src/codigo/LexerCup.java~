@@ -875,7 +875,7 @@ public class LexerCup implements java_cup.runtime.Scanner {
             }
           case 55: break;
           case 3: 
-            { System.out.println(yytext() + "\n"); return new Symbol(Sym.IDENTIFIER, yycolumn, yyline, yytext());
+            { return new Symbol(Sym.IDENTIFIER, yycolumn, yyline, yytext());
             }
           case 56: break;
           case 4: 
