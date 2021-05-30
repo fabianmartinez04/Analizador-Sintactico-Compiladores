@@ -1,14 +1,30 @@
 package codigo;
-import  java_cup.runtime.Symbol;
+import  java_cup.runtime.*;
+import java.util.LinkedList;
 
 /*Parser code*/
 parser code
 {:
-    public void syntax_error(Symbol s) {
+    public LinkedList<ErrorMsg> errorList = new LinkedList<ErrorMsg>();
+ 
+    public void syntax_error(Symbol s) 
+    {
         String lexeme = s.value.toString();
         int row =  s.right + 1;
-        int column = s.left + 1 ;
-        System.out.println("Syntax error: " + lexeme + " at: " + row + ":" + column);
+        int column = s.left + 1;
+        System.out.println("Sintax error at: " + lexeme + " row: " + row + " column: " + column);
+        ErrorMsg error =  new ErrorMsg(lexeme, "Syntax error", row, column);
+        errorList.add(error);
+    }
+
+    public void unrecovered_syntax_error(Symbol s)
+    {        
+        String lexeme = s.value.toString();
+        int row = s.right + 1;
+        int column = s.left + 1;
+        System.out.println("Unrecovered Sintax error: " + lexeme + " row: " + row + " column: " + column);
+        ErrorMsg error =  new ErrorMsg(lexeme, "Syntax error", row, column);
+        errorList.add(error);
     }
 :}
 
@@ -28,8 +44,8 @@ terminal String I_BREAK,I_CASE,I_CHAR,I_CONST,I_CONTINUE,I_DEFAULT,I_DO,I_ELSE,I
 terminal String SEMICOLON, COMMA, IDENTIFIER, OPEN_KEY, CLOSE_KEY;
 
 /* NON TERMINALS */
-non terminal String program, decl_list, global_decl, const_decl, funct_decl, var_type, var_asign, var_decl;
-non terminal String literal, declaration;
+non terminal String program, decl_list, global_decl, const_decl, funct_decl, var_type, var_decl;
+non terminal String literal, declaration, type_function, var_func_decl_list, stmts, var_func_decl;
 
 start with program;
 
@@ -41,6 +57,12 @@ decl_list ::= declaration:d decl_list:dl
 declaration ::= global_decl:gl
     | const_decl:cl
     | funct_decl:fl
+    | error SEMICOLON
+    | error OPEN_KEY
+    | error CLOSE_KEY
+    | error OPEN_BRACKET
+    | error CLOSE_BRACKET
+    | error IDENTIFIER
 ;
 global_decl ::= var_type:vt var_decl:vd SEMICOLON
 ;
@@ -61,4 +83,20 @@ literal	::= NUMBER:n
     | BINARY_NUMBER:n
 ;
 const_decl  ::= I_CONST var_type:vt var_decl:vd SEMICOLON
+;
+funct_decl ::= type_function:ft IDENTIFIER:i OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck
+;
+function_type   ::= I_SHORT:i
+    | I_LONG:i
+    | I_CHAR:i
+    | I_INT:i
+    | I_VOID:i
+;
+var_func_decl_list   ::= var_func_decl:vfd COMMA var_func_decl_list:vfdl
+    | var_func_decl:vfd
+;
+var_func_decl ::= var_type:vt IDENTIFIER:i
+;
+stmts    ::= var_type:vt var_decl:vd SEMICOLON stmts:s
+    | var_type:vt var_decl:vd
 ;

@@ -119,8 +119,8 @@ Comment = "//".*
 <YYINITIAL> "," { return new Symbol(Sym.COMMA, yycolumn, yyline, yytext()); }
 
 /*Identifiers*/
-{L}({L}|{DecDigit})* { System.out.println(); return new Symbol(Sym.IDENTIFIER, yycolumn, yyline, yytext()); }
+{L}({L}|{DecDigit})* { return new Symbol(Sym.IDENTIFIER, yycolumn, yyline, yytext()); }
 
 
 
-[^*] { System.out.println("ERROR:" + yytext() + " columna: " + yycolumn + " fila: " + yyline); }
+<YYINITIAL> . { System.out.println("ERROR:" + yytext() + " columna: " + yycolumn + " fila: " + yyline); }
