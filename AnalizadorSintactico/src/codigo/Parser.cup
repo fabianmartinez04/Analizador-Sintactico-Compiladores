@@ -49,11 +49,11 @@ terminal String SEMICOLON, COMMA, IDENTIFIER,COLON;
 non terminal String program, decl_list, global_decl, const_decl, funct_decl, var_type, var_decl, functin_init;
 non terminal String literal, declaration, var_func_decl_list, stmts, var_func_decl;
 non terminal String structs, struct_decl, struct_type, condition_for, condition, var, comparator, change_var,if,else;
-non terminal String switch_sent,mult_case_stmt, case_stmt, case_fin, return;
+non terminal String switch_sent,mult_case_stmt, case_stmt, case_fin, return,if_sent,if_inst,else_inst;
 
 start with program;
 
-program ::= switch_sent:ss
+program ::= decl_list:dl
 ;
 decl_list ::= declaration:d decl_list:dl
     | declaration:d
@@ -104,24 +104,32 @@ var_func_decl ::= var_type:vt IDENTIFIER:i
 
 stmts ::= var_type:vt var_decl:vd SEMICOLON stmts:s
         | var_type:vt var_decl:vd SEMICOLON
+        | structs:st stmts:sm
         | structs:st 
 ;
 
 structs ::= struct_decl OPEN_KEY:ok stmts:s CLOSE_KEY:ck
            |switch_sent:ss 
-
+           |if_sent:is
 ;            
 struct_decl ::= struct_type:st OPEN_BRACKET:ob condition:c CLOSE_BRACKET:cb
             | struct_type:st OPEN_BRACKET:ob condition_for:cf CLOSE_BRACKET:cb 
 ;
 struct_type ::= I_FOR:f
-               |I_IF:i
-               |I_ELSE:e //ojo
                |I_WHILE:w
 ;
 
+if_sent ::= if_inst:is else_inst:es
+        |if_inst:is
+;
 
-switch_sent ::= I_SWITCH:s OPEN_BRACKET:o NUMBER:n CLOSE_BRACKET:c 
+if_inst ::= I_IF:i OPEN_BRACKET:ob condition:c CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck 
+;
+
+else_inst ::= I_ELSE:i OPEN_KEY:ok stmts:s CLOSE_KEY:ck 
+;
+
+switch_sent ::= I_SWITCH:s OPEN_BRACKET:o NUMBER:n CLOSE_BRACKET:c OPEN_KEY:ok mult_case_stmt:mcs CLOSE_KEY:ck
 ;
 
 mult_case_stmt ::= case_stmt:cs mult_case_stmt:mcs | case_stmt:cs                                           
@@ -135,7 +143,7 @@ case_stmt ::= I_CASE:c NUMBER:n COLON stmts:s case_fin:cf
             | I_DEFAULT:d COLON:c stmts:s case_fin:cf return:r
             | I_DEFAULT:d COLON:c stmts:s
 ;
-case_fin ::= I_BREAK:b | I_CONTINUE:c                                                        
+case_fin ::= I_BREAK:b SEMICOLON | I_CONTINUE:c SEMICOLON                                                     
 ;
 return ::= I_RETURN:r NUMBER:n SEMICOLON:s                                                                    
 ;
@@ -145,7 +153,7 @@ change_var ::= INCR:i
 ;
 condition ::=  var:v comparator:c var:v1 
 ;
-condition_for ::= var_decl:vd SEMICOLON:sc condition:c SEMICOLON:sc1 IDENTIFIER:i change_var:cv
+condition_for ::= var_type:vt var_decl:vd SEMICOLON:sc condition:c SEMICOLON:sc1 IDENTIFIER:i change_var:cv
 ;
 comparator ::= EQUAL_TO:et 
              |GREATER_EQUAL:ge

@@ -117,6 +117,8 @@ Comment = "//".*
 <YYINITIAL> "while" { return new Symbol(Sym.I_WHILE, yycolumn, yyline, yytext()); }
 <YYINITIAL> ";" { return new Symbol(Sym.SEMICOLON, yycolumn, yyline, yytext()); }
 <YYINITIAL> "," { return new Symbol(Sym.COMMA, yycolumn, yyline, yytext()); }
+<YYINITIAL> ":" { return new Symbol(Sym.COLON, yycolumn, yyline, yytext()); }
+
 
 /*Identifiers*/
 {L}({L}|{DecDigit})* { return new Symbol(Sym.IDENTIFIER, yycolumn, yyline, yytext()); }
