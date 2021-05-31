@@ -5,7 +5,8 @@
 
 package codigo;
 
-import java_cup.runtime.Symbol;
+import java_cup.runtime.*;
+import java.util.LinkedList;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -31,7 +32,29 @@ public class Scanner extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\002\000\002\002\004\000\002\002\005" });
+    "\000\112\000\002\002\004\000\002\002\003\000\002\003" +
+    "\004\000\002\003\003\000\002\013\003\000\002\013\003" +
+    "\000\002\013\003\000\002\013\004\000\002\013\004\000" +
+    "\002\013\004\000\002\013\004\000\002\013\004\000\002" +
+    "\013\004\000\002\004\006\000\002\004\010\000\002\004" +
+    "\004\000\002\004\006\000\002\007\003\000\002\007\003" +
+    "\000\002\007\003\000\002\007\003\000\002\010\005\000" +
+    "\002\010\003\000\002\010\007\000\002\010\005\000\002" +
+    "\012\003\000\002\012\003\000\002\012\003\000\002\012" +
+    "\003\000\002\012\003\000\002\005\006\000\002\006\011" +
+    "\000\002\011\003\000\002\011\004\000\002\014\005\000" +
+    "\002\014\003\000\002\016\004\000\002\015\006\000\002" +
+    "\015\005\000\002\015\003\000\002\017\006\000\002\017" +
+    "\003\000\002\020\006\000\002\020\006\000\002\021\003" +
+    "\000\002\021\003\000\002\021\003\000\002\021\003\000" +
+    "\002\031\006\000\002\032\004\000\002\032\003\000\002" +
+    "\033\007\000\002\033\007\000\002\033\010\000\002\033" +
+    "\006\000\002\033\006\000\002\033\006\000\002\033\007" +
+    "\000\002\033\005\000\002\034\003\000\002\034\003\000" +
+    "\002\035\005\000\002\026\003\000\002\026\003\000\002" +
+    "\023\005\000\002\022\010\000\002\025\003\000\002\025" +
+    "\003\000\002\025\003\000\002\025\003\000\002\025\003" +
+    "\000\002\025\003\000\002\024\003\000\002\024\003" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -39,9 +62,10 @@ public class Scanner extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\006\000\004\054\005\001\002\000\004\002\010\001" +
-    "\002\000\004\064\006\001\002\000\004\063\007\001\002" +
-    "\000\004\002\000\001\002\000\004\002\001\001\002" });
+    "\000\010\000\004\062\004\001\002\000\004\014\010\001" +
+    "\002\000\004\002\007\001\002\000\004\002\000\001\002" +
+    "\000\004\002\001\001\002\000\004\041\011\001\002\000" +
+    "\004\015\012\001\002\000\004\002\uffd1\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -49,9 +73,9 @@ public class Scanner extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\006\000\004\002\003\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001" });
+    "\000\010\000\006\002\004\031\005\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -90,20 +114,26 @@ public class Scanner extends java_cup.runtime.lr_parser {
 
 
 
-    public void syntax_error(Symbol s) {
+    public LinkedList<ErrorMsg> errorList = new LinkedList<ErrorMsg>();
+ 
+    public void syntax_error(Symbol s) 
+    {
         String lexeme = s.value.toString();
-        int row = s.right;
-        int column = s.left;
-        System.out.println("ERROR-1: " + lexeme + " row: " + row + " column: " + column);
-        /*Guardar el error en una estructura de datos*/
+        int row =  s.right + 1;
+        int column = s.left + 1;
+        System.out.println("Sintax error at: " + lexeme + " row: " + row + " column: " + column);
+        ErrorMsg error =  new ErrorMsg(lexeme, "Syntax error", row, column);
+        errorList.add(error);
     }
 
-    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    public void unrecovered_syntax_error(Symbol s)
     {        
         String lexeme = s.value.toString();
-        int row = s.right;
-        int column = s.left;
-        System.out.println("ERROR-2: " + lexeme + " row: " + row + " column: " + column);
+        int row = s.right + 1;
+        int column = s.left + 1;
+        System.out.println("Unrecovered Sintax error: " + lexeme + " row: " + row + " column: " + column);
+        ErrorMsg error =  new ErrorMsg(lexeme, "Syntax error", row, column);
+        errorList.add(error);
     }
 
 
@@ -135,7 +165,7 @@ class CUP$Scanner$actions {
       switch (CUP$Scanner$act_num)
         {
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 0: // $START ::= Program EOF 
+          case 0: // $START ::= program EOF 
             {
               Object RESULT =null;
 		int start_valleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
@@ -149,11 +179,1049 @@ class CUP$Scanner$actions {
           return CUP$Scanner$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 1: // Program ::= i_int identifier semicolon 
+          case 1: // program ::= switch_sent 
             {
               String RESULT =null;
-		RESULT="Started";
-              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("Program",0, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+		int ssleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int ssright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String ss = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("program",0, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 2: // decl_list ::= declaration decl_list 
+            {
+              String RESULT =null;
+		int dleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int dright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String d = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int dlleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int dlright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String dl = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("decl_list",1, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 3: // decl_list ::= declaration 
+            {
+              String RESULT =null;
+		int dleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int dright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String d = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("decl_list",1, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 4: // declaration ::= global_decl 
+            {
+              String RESULT =null;
+		int glleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int glright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String gl = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("declaration",9, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 5: // declaration ::= const_decl 
+            {
+              String RESULT =null;
+		int clleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int clright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String cl = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("declaration",9, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 6: // declaration ::= funct_decl 
+            {
+              String RESULT =null;
+		int flleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int flright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String fl = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("declaration",9, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 7: // declaration ::= error SEMICOLON 
+            {
+              String RESULT =null;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("declaration",9, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 8: // declaration ::= error OPEN_KEY 
+            {
+              String RESULT =null;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("declaration",9, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 9: // declaration ::= error CLOSE_KEY 
+            {
+              String RESULT =null;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("declaration",9, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 10: // declaration ::= error OPEN_BRACKET 
+            {
+              String RESULT =null;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("declaration",9, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 11: // declaration ::= error CLOSE_BRACKET 
+            {
+              String RESULT =null;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("declaration",9, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 12: // declaration ::= error IDENTIFIER 
+            {
+              String RESULT =null;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("declaration",9, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 13: // global_decl ::= var_func_decl COMMA var_decl SEMICOLON 
+            {
+              String RESULT =null;
+		int vdleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int vdright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String vd = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("global_decl",2, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 14: // global_decl ::= var_func_decl EQUAL literal COMMA var_decl SEMICOLON 
+            {
+              String RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).right;
+		String l = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).value;
+		int vdleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int vdright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String vd = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("global_decl",2, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-5)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 15: // global_decl ::= var_func_decl SEMICOLON 
+            {
+              String RESULT =null;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("global_decl",2, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 16: // global_decl ::= var_func_decl EQUAL literal SEMICOLON 
+            {
+              String RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String l = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("global_decl",2, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 17: // var_type ::= I_SHORT 
+            {
+              String RESULT =null;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("var_type",5, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 18: // var_type ::= I_LONG 
+            {
+              String RESULT =null;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("var_type",5, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 19: // var_type ::= I_CHAR 
+            {
+              String RESULT =null;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("var_type",5, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 20: // var_type ::= I_INT 
+            {
+              String RESULT =null;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("var_type",5, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 21: // var_decl ::= IDENTIFIER EQUAL literal 
+            {
+              String RESULT =null;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int lleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String l = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("var_decl",6, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 22: // var_decl ::= IDENTIFIER 
+            {
+              String RESULT =null;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("var_decl",6, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 23: // var_decl ::= IDENTIFIER EQUAL literal COMMA var_decl 
+            {
+              String RESULT =null;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).value;
+		int lleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String l = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int vdleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int vdright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String vd = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("var_decl",6, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 24: // var_decl ::= IDENTIFIER COMMA var_decl 
+            {
+              String RESULT =null;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int vdleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int vdright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String vd = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("var_decl",6, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 25: // literal ::= NUMBER 
+            {
+              String RESULT =null;
+		int nleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int nright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String n = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("literal",8, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 26: // literal ::= LITERAL_STR 
+            {
+              String RESULT =null;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("literal",8, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 27: // literal ::= OCTAL_NUMBER 
+            {
+              String RESULT =null;
+		int nleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int nright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String n = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("literal",8, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 28: // literal ::= HEXADECIMAL_NUMBER 
+            {
+              String RESULT =null;
+		int nleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int nright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String n = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("literal",8, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 29: // literal ::= BINARY_NUMBER 
+            {
+              String RESULT =null;
+		int nleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int nright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String n = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("literal",8, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 30: // const_decl ::= I_CONST var_type var_decl SEMICOLON 
+            {
+              String RESULT =null;
+		int vtleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int vtright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String vt = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int vdleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int vdright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String vd = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("const_decl",3, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 31: // funct_decl ::= functin_init OPEN_BRACKET var_func_decl_list CLOSE_BRACKET OPEN_KEY stmts CLOSE_KEY 
+            {
+              String RESULT =null;
+		int fileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-6)).left;
+		int firight = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-6)).right;
+		String fi = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-6)).value;
+		int obleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-5)).left;
+		int obright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-5)).right;
+		String ob = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-5)).value;
+		int vfdlleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).left;
+		int vfdlright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).right;
+		String vfdl = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).value;
+		int cbleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).left;
+		int cbright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).right;
+		String cb = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).value;
+		int okleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int okright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String ok = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int ckleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int ckright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String ck = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("funct_decl",4, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-6)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 32: // functin_init ::= var_func_decl 
+            {
+              String RESULT =null;
+		int cfdleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int cfdright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String cfd = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("functin_init",7, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 33: // functin_init ::= I_VOID IDENTIFIER 
+            {
+              String RESULT =null;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int idleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String id = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("functin_init",7, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 34: // var_func_decl_list ::= var_func_decl COMMA var_func_decl_list 
+            {
+              String RESULT =null;
+		int vfdleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int vfdright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String vfd = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int vfdlleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int vfdlright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String vfdl = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("var_func_decl_list",10, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 35: // var_func_decl_list ::= var_func_decl 
+            {
+              String RESULT =null;
+		int vfdleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int vfdright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String vfd = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("var_func_decl_list",10, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 36: // var_func_decl ::= var_type IDENTIFIER 
+            {
+              String RESULT =null;
+		int vtleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int vtright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String vt = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("var_func_decl",12, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 37: // stmts ::= var_type var_decl SEMICOLON stmts 
+            {
+              String RESULT =null;
+		int vtleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).left;
+		int vtright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).right;
+		String vt = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).value;
+		int vdleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int vdright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String vd = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("stmts",11, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 38: // stmts ::= var_type var_decl SEMICOLON 
+            {
+              String RESULT =null;
+		int vtleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int vtright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String vt = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int vdleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int vdright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String vd = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("stmts",11, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 39: // stmts ::= structs 
+            {
+              String RESULT =null;
+		int stleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int stright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String st = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("stmts",11, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 40: // structs ::= struct_decl OPEN_KEY stmts CLOSE_KEY 
+            {
+              String RESULT =null;
+		int okleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int okright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String ok = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int ckleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int ckright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String ck = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("structs",13, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 41: // structs ::= switch_sent 
+            {
+              String RESULT =null;
+		int ssleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int ssright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String ss = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("structs",13, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 42: // struct_decl ::= struct_type OPEN_BRACKET condition CLOSE_BRACKET 
+            {
+              String RESULT =null;
+		int stleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).left;
+		int stright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).right;
+		String st = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).value;
+		int obleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int obright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String ob = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int cbleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int cbright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String cb = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("struct_decl",14, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 43: // struct_decl ::= struct_type OPEN_BRACKET condition_for CLOSE_BRACKET 
+            {
+              String RESULT =null;
+		int stleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).left;
+		int stright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).right;
+		String st = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).value;
+		int obleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int obright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String ob = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int cfleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int cfright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String cf = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int cbleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int cbright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String cb = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("struct_decl",14, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 44: // struct_type ::= I_FOR 
+            {
+              String RESULT =null;
+		int fleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int fright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String f = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("struct_type",15, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 45: // struct_type ::= I_IF 
+            {
+              String RESULT =null;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("struct_type",15, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 46: // struct_type ::= I_ELSE 
+            {
+              String RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String e = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("struct_type",15, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 47: // struct_type ::= I_WHILE 
+            {
+              String RESULT =null;
+		int wleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int wright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String w = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("struct_type",15, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 48: // switch_sent ::= I_SWITCH OPEN_BRACKET NUMBER CLOSE_BRACKET 
+            {
+              String RESULT =null;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).value;
+		int oleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int oright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String o = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int nleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int nright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String n = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("switch_sent",23, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 49: // mult_case_stmt ::= case_stmt mult_case_stmt 
+            {
+              String RESULT =null;
+		int csleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int csright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String cs = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int mcsleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int mcsright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String mcs = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("mult_case_stmt",24, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 50: // mult_case_stmt ::= case_stmt 
+            {
+              String RESULT =null;
+		int csleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int csright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String cs = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("mult_case_stmt",24, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 51: // case_stmt ::= I_CASE NUMBER COLON stmts case_fin 
+            {
+              String RESULT =null;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).value;
+		int nleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).left;
+		int nright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).right;
+		String n = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int cfleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int cfright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String cf = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("case_stmt",25, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 52: // case_stmt ::= I_CASE NUMBER COLON stmts return 
+            {
+              String RESULT =null;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).value;
+		int nleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).left;
+		int nright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).right;
+		String n = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int rleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String r = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("case_stmt",25, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 53: // case_stmt ::= I_CASE NUMBER COLON stmts case_fin return 
+            {
+              String RESULT =null;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-5)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-5)).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-5)).value;
+		int nleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).left;
+		int nright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).right;
+		String n = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int cfleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int cfright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String cf = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int rleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String r = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("case_stmt",25, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-5)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 54: // case_stmt ::= I_CASE NUMBER COLON stmts 
+            {
+              String RESULT =null;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).value;
+		int nleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int nright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String n = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("case_stmt",25, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 55: // case_stmt ::= I_DEFAULT COLON stmts case_fin 
+            {
+              String RESULT =null;
+		int dleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).left;
+		int dright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).right;
+		String d = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).value;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int cfleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int cfright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String cf = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("case_stmt",25, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 56: // case_stmt ::= I_DEFAULT COLON stmts return 
+            {
+              String RESULT =null;
+		int dleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).left;
+		int dright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).right;
+		String d = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).value;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int rleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String r = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("case_stmt",25, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 57: // case_stmt ::= I_DEFAULT COLON stmts case_fin return 
+            {
+              String RESULT =null;
+		int dleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).left;
+		int dright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).right;
+		String d = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).value;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int cfleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int cfright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String cf = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int rleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String r = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("case_stmt",25, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 58: // case_stmt ::= I_DEFAULT COLON stmts 
+            {
+              String RESULT =null;
+		int dleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int dright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String d = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("case_stmt",25, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 59: // case_fin ::= I_BREAK 
+            {
+              String RESULT =null;
+		int bleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String b = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("case_fin",26, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 60: // case_fin ::= I_CONTINUE 
+            {
+              String RESULT =null;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("case_fin",26, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 61: // return ::= I_RETURN NUMBER SEMICOLON 
+            {
+              String RESULT =null;
+		int rleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String r = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int nleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int nright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String n = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("return",27, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 62: // change_var ::= INCR 
+            {
+              String RESULT =null;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("change_var",20, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 63: // change_var ::= DECR 
+            {
+              String RESULT =null;
+		int dleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int dright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String d = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("change_var",20, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 64: // condition ::= var comparator var 
+            {
+              String RESULT =null;
+		int vleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int vright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String v = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int v1left = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int v1right = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String v1 = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("condition",17, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 65: // condition_for ::= var_decl SEMICOLON condition SEMICOLON IDENTIFIER change_var 
+            {
+              String RESULT =null;
+		int vdleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-5)).left;
+		int vdright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-5)).right;
+		String vd = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-5)).value;
+		int scleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).left;
+		int scright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).right;
+		String sc = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-4)).value;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-3)).value;
+		int sc1left = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).left;
+		int sc1right = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).right;
+		String sc1 = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-2)).value;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.elementAt(CUP$Scanner$top-1)).value;
+		int cvleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int cvright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String cv = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("condition_for",16, ((java_cup.runtime.Symbol)CUP$Scanner$stack.elementAt(CUP$Scanner$top-5)), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 66: // comparator ::= EQUAL_TO 
+            {
+              String RESULT =null;
+		int etleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int etright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String et = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("comparator",19, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 67: // comparator ::= GREATER_EQUAL 
+            {
+              String RESULT =null;
+		int geleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int geright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String ge = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("comparator",19, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 68: // comparator ::= LESS 
+            {
+              String RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String l = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("comparator",19, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 69: // comparator ::= LESS_EQUAL 
+            {
+              String RESULT =null;
+		int leleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int leright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String le = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("comparator",19, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 70: // comparator ::= GREATER 
+            {
+              String RESULT =null;
+		int grleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int grright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String gr = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("comparator",19, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 71: // comparator ::= NOT_EQUAL 
+            {
+              String RESULT =null;
+		int neleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int neright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String ne = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("comparator",19, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 72: // var ::= NUMBER 
+            {
+              String RESULT =null;
+		int nleft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int nright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String n = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("var",18, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
+            }
+          return CUP$Scanner$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 73: // var ::= IDENTIFIER 
+            {
+              String RESULT =null;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Scanner$stack.peek()).value;
+
+              CUP$Scanner$result = parser.getSymbolFactory().newSymbol("var",18, ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), ((java_cup.runtime.Symbol)CUP$Scanner$stack.peek()), RESULT);
             }
           return CUP$Scanner$result;
 
