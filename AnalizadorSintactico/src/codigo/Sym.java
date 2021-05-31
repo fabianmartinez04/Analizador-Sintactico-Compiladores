@@ -48,6 +48,7 @@ public class Sym {
   public static final int OPEN_BRACKET = 10;
   public static final int HEXADECIMAL_NUMBER = 32;
   public static final int EQUAL_TO = 18;
+  public static final int COLON = 54;
   public static final int SUB_EQUAL = 13;
   public static final int ADD_EQUAL = 12;
   public static final int OCTAL_NUMBER = 30;
@@ -116,7 +117,8 @@ public class Sym {
   "I_WHILE",
   "SEMICOLON",
   "COMMA",
-  "IDENTIFIER"
+  "IDENTIFIER",
+  "COLON"
   };
 }
 
