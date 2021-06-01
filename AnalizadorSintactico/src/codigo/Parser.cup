@@ -92,6 +92,7 @@ literal	::= NUMBER:n
 const_decl  ::= I_CONST var_type:vt var_decl:vd SEMICOLON
 ;
 funct_decl ::= functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck
+            | functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck
 ;
 functin_init   ::= var_func_decl:cfd
     | I_VOID:i IDENTIFIER:id
