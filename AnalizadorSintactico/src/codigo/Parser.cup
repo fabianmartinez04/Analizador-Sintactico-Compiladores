@@ -49,14 +49,14 @@ terminal String SEMICOLON, COMMA, IDENTIFIER,COLON;
 non terminal String program, decl_list, global_decl, const_decl, funct_decl, var_type, var_decl, functin_init;
 non terminal String literal, declaration, var_func_decl_list, stmts, var_func_decl;
 non terminal String structs, struct_decl, struct_type, condition_for, condition, var, comparator, change_var,if,else;
-non terminal String switch_sent,mult_case_stmt, case_stmt, case_fin, return,if_sent,if_inst,else_inst;
-
+non terminal String switch_sent,mult_case_stmt, case_stmt, case_fin, return,if_sent,if_inst,else_inst, asign_equal;
+non terminal String equals, incr_decr, math_expr, value, expr_uni, expr_math, expr;
 start with program;
 
 program ::= decl_list:dl
 ;
 decl_list ::= declaration:d decl_list:dl
-    | declaration:d
+    | declaration:d | asign_equal:ae
 ;
 declaration ::= global_decl:gl
     | const_decl:cl 
@@ -77,6 +77,7 @@ var_type ::=  I_SHORT:i
     | I_LONG:i
     | I_CHAR:i
     | I_INT:i
+    | I_CHAR:i MUL:m
 ;
 var_decl   ::= IDENTIFIER:i EQUAL literal:l
     | IDENTIFIER:i
@@ -92,7 +93,9 @@ literal	::= NUMBER:n
 const_decl  ::= I_CONST var_type:vt var_decl:vd SEMICOLON
 ;
 funct_decl ::= functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck
-            | functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck
+    | functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck
+    | functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb OPEN_KEY:ok CLOSE_KEY:ck
+    | functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb OPEN_KEY:ok CLOSE_KEY:ck
 ;
 functin_init   ::= var_func_decl:cfd
     | I_VOID:i IDENTIFIER:id
@@ -103,11 +106,21 @@ var_func_decl_list   ::= var_func_decl:vfd COMMA var_func_decl_list:vfdl
 var_func_decl ::= var_type:vt IDENTIFIER:i
 ;
 
-stmts ::= var_type:vt var_decl:vd SEMICOLON stmts:s
-        | var_type:vt var_decl:vd SEMICOLON
+stmts ::= const_decl stmts:s
+        | const_decl
+        | global_decl:gl stmts:s
+        | global_decl:gl
         | structs:st stmts:sm
         | structs:st 
+        | asign_equal:ae SEMICOLON:sc stmts:sm
+        | asign_equal:ae SEMICOLON:sc
+        | incr_decr SEMICOLON:sc stmts:sm
+        | incr_decr
+        | expr_math SEMICOLON:sc stmts:sm
+        | expr_math
 ;
+
+
 
 structs ::= struct_decl OPEN_KEY:ok stmts:s CLOSE_KEY:ck
            |switch_sent:ss 
@@ -130,7 +143,7 @@ if_inst ::= I_IF:i OPEN_BRACKET:ob condition:c CLOSE_BRACKET:cb OPEN_KEY:ok stmt
 else_inst ::= I_ELSE:i OPEN_KEY:ok stmts:s CLOSE_KEY:ck 
 ;
 
-switch_sent ::= I_SWITCH:s OPEN_BRACKET:o NUMBER:n CLOSE_BRACKET:c OPEN_KEY:ok mult_case_stmt:mcs CLOSE_KEY:ck
+switch_sent ::= I_SWITCH:s OPEN_BRACKET:o var:v CLOSE_BRACKET:c OPEN_KEY:ok mult_case_stmt:mcs CLOSE_KEY:ck
 ;
 
 mult_case_stmt ::= case_stmt:cs mult_case_stmt:mcs | case_stmt:cs                                           
@@ -154,7 +167,9 @@ change_var ::= INCR:i
 ;
 condition ::=  var:v comparator:c var:v1 
 ;
-condition_for ::= var_type:vt var_decl:vd SEMICOLON:sc condition:c SEMICOLON:sc1 IDENTIFIER:i change_var:cv
+condition_for ::= var_type:vt var_decl:vd SEMICOLON:sc condition:c SEMICOLON:sc1 incr_decr
+;
+incr_decr ::= IDENTIFIER:i change_var:cv
 ;
 comparator ::= EQUAL_TO:et 
              |GREATER_EQUAL:ge
@@ -165,5 +180,56 @@ comparator ::= EQUAL_TO:et
 ;
 var ::= NUMBER:n
     | IDENTIFIER:i
+;
+asign_equal ::= IDENTIFIER:i equals:e var
+;
+
+equals ::= ADD_EQUAL 
+    | SUB_EQUAL 
+    | MUL_EQUAL 
+    | DIV_EQUAL
+;
+/*
+math_expr ::= math_expr expr_math_part 
+    | expr_math_part;
+expr_math_part ::= expr_math;
+expr_math ::= expr_math ADD expr_math 
+    | expr_math SUB expr_math 
+    | expr_math MUL expr_math 
+    | expr_math DIV expr_math  
+    | expr_math MOD expr_math
+//    | MINUS expr %prec UMINUS
+    | OPEN_BRACKET expr_math CLOSE_BRACKET
+    | value
+;
+*/
+expr_math ::= value expr_uni 
+    | expr 
+;
+expr_uni ::= ADD:a value:n
+    | SUB:s value:n
+    | MUL:m value:n
+    | DIV:d value:n
+    | MOD:d value:n 
+;
+expr ::= value:n ADD:a value:n1
+;
+expr ::= value:n SUB:s value:n1
+;
+expr ::= value:n MUL:m value:n1
+;
+expr ::= value:n DIV:d value:n1
+;
+expr ::= value:n MOD:d value:n1
+;
+expr ::= OPEN_BRACKET:o expr:e CLOSE_BRACKET:c
+;
+expr ::= value:n
+;
+value ::= NUMBER:n
+    | IDENTIFIER:i
+    | OCTAL_NUMBER:n
+    | HEXADECIMAL_NUMBER:n
+    | BINARY_NUMBER:n
 ;
 
