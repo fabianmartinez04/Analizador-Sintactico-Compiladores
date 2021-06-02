@@ -21,7 +21,7 @@ OctDigit = 0[1-7]+
 WhiteSpace = [ \t\r\n]+
 BackSlash = [\\]
 Operators = ","|";"|"++"|"--"|"=="|">="|">"|"?"|"<="|"<"|"!="|"||"|"&&"|"!"|"="|"+"|"-"|"*"|"/"|"%"|"("|")"|"["|"]"|"{"|"}"|":"|"."|"+="|"-="|"*="|"/="|"&"|"^"|"|"|">>"|"<<"|"~"|"%="|"&="|"^="|"|="|"<<="|">>="|"->"
-Invalid = "ç"|"Ç"|"ñ"|"'"|"Ñ"|"&"|"/"|"%"|"^"|"@"|"'"|"ê"|"«"|"¿"|"¡"|"Ü"|"╝"|"á"|"é"|"í"|"ó"|"ú"|"Á"|"É"|"Í"|"Ó"|"Ú"
+Invalid = "ç"|"Ç"|"ñ"|"'"|"Ñ"|"&"|"^"|"@"|"'"|"ê"|"«"|"¿"|"¡"|"Ü"|"╝"|"á"|"é"|"í"|"ó"|"ú"|"Á"|"É"|"Í"|"Ó"|"Ú"
 KeyWords = "auto"|"break"|"case"|"char"|"const"|"continue"|"default"|"do"|"double"|"else"|"enum"|"extern"|"float"|"for"|"goto"|"if"|"int"|"long"|"register"|"return"|"short"|"signed"|"sizeof"|"static"|"struct"|"switch"|"typedef"|"union"|"unsigned"|"void"|"volatile"|"while"
 CommentMultiline = "/*" ~"*/"
 Comment = "//".*
@@ -39,8 +39,10 @@ Comment = "//".*
 /*LITERALS*/
 
 /*Strings*/
-("\""({BackSlash}|{L}|{DecDigit}|" "|"\t"|"\r"|{Invalid}|{Acentos})*"\"") | ("\'"({BackSlash}|{L}|{DecDigit}|" "|"\t"|"\r"|{Invalid}|{Acentos})*"\'")  {lexeme = yytext(); row = yyline; column = yycolumn; return LiteralString; }
+("\""({BackSlash}|{L}|{DecDigit}|" "|"\t"|"\r"|{Invalid}|{Acentos})*"\"")  {lexeme = yytext(); row = yyline; column = yycolumn; return LiteralString; }
 
+/*Char*/
+("\'"({BackSlash}|{L}|{DecDigit}|" "|"\t"|"\r"|{Invalid}|{Acentos})"\'")  {lexeme = yytext(); row = yyline; column = yycolumn; return LiteralString; }
 
 /*Numbers*/
 

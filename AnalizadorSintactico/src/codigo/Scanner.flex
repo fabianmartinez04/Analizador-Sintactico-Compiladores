@@ -23,7 +23,7 @@ BinDigit = [0|1]+
 OctDigit = 0[1-7]+
 WhiteSpace = [ \t\r\n\f]+
 BackSlash = [\\]
-Invalid = "ç"|"Ç"|"ñ"|"'"|"Ñ"|"&"|"/"|"%"|"^"|"@"|"'"|"ê"|"«"|"¿"|"¡"|"Ü"|"╝"|"á"|"é"|"í"|"ó"|"ú"|"Á"|"É"|"Í"|"Ó"|"Ú"
+Invalid = "ç"|"Ç"|"ñ"|"'"|"Ñ"|"&"|"^"|"@"|"'"|"ê"|"«"|"¿"|"¡"|"Ü"|"╝"|"á"|"é"|"í"|"ó"|"ú"|"Á"|"É"|"Í"|"Ó"|"Ú"
 CommentMultiline = "/*" ~"*/"
 Comment = "//".*
 %%
@@ -68,7 +68,10 @@ Comment = "//".*
 /*LITERALS*/
 
 /*Strings*/
-("\""({BackSlash}|{L}|{DecDigit}|" "|"\t"|"\r"|{Invalid}|{Acentos})*"\"") | ("\'"({BackSlash}|{L}|{DecDigit}|" "|"\t"|"\r"|{Invalid}|{Acentos})*"\'")  { return new Symbol(Sym.LITERAL_STR, yycolumn, yyline, yytext()); }
+("\""({BackSlash}|{L}|{DecDigit}|" "|"\t"|"\r"|{Invalid}|{Acentos})*"\"") { return new Symbol(Sym.LITERAL_STR, yycolumn, yyline, yytext()); }
+
+/*Char*/
+ ("\'"({BackSlash}|{L}|{DecDigit}|" "|"\t"|"\r"|{Invalid}|{Acentos})"\'")  { return new Symbol(Sym.LITERAL_CHAR, yycolumn, yyline, yytext()); }
 
 
 /*Numbers*/

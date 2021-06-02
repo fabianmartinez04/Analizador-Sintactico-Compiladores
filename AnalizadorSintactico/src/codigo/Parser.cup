@@ -39,7 +39,7 @@ action code
 terminal String INCR, DECR, EQUAL, ADD, SUB, MUL, DIV, MOD;
 terminal String OPEN_BRACKET, CLOSE_BRACKET, ADD_EQUAL, SUB_EQUAL, MUL_EQUAL, DIV_EQUAL, OPEN_KEY, CLOSE_KEY;
 terminal String EQUAL_TO, GREATER_EQUAL, LESS, LESS_EQUAL, GREATER, NOT_EQUAL, LOGICAL_OR, LOGICAL_AND, LOGICAL_NOT;
-terminal String LITERAL_STR, FLOAT_NUMBER, FLOAT_POINT_NUMBER;
+terminal String LITERAL_STR, FLOAT_NUMBER, FLOAT_POINT_NUMBER,LITERAL_CHAR;
 terminal String OCTAL_NUMBER, NUMBER, HEXADECIMAL_NUMBER, BINARY_NUMBER;
 terminal String I_BREAK, I_CASE, I_CHAR, I_CONST, I_CONTINUE, I_DEFAULT, I_DO, I_ELSE, I_FOR, I_IF, I_INT, I_LONG;
 terminal String I_RETURN, I_SHORT, I_SWITCH, I_VOID, I_WHILE;
@@ -50,7 +50,7 @@ non terminal String program, decl_list, global_decl, const_decl, funct_decl, var
 non terminal String literal, declaration, var_func_decl_list, stmts, var_func_decl;
 non terminal String structs, struct_decl, struct_type, condition_for, condition, var, comparator, change_var,if,else;
 non terminal String switch_sent,mult_case_stmt, case_stmt, case_fin, return,if_sent,if_inst,else_inst, asign_equal;
-non terminal String equals, incr_decr, math_expr, value, expr_uni, expr_math, expr;
+non terminal String equals, incr_decr, math_expr, value, expr_uni, expr_math, expr,symbol;
 start with program;
 
 program ::= decl_list:dl
@@ -72,12 +72,13 @@ global_decl ::= var_func_decl COMMA var_decl:vd SEMICOLON
     | var_func_decl EQUAL literal:l COMMA var_decl:vd SEMICOLON
     | var_func_decl SEMICOLON
     | var_func_decl EQUAL literal:l SEMICOLON
+    | I_CHAR:i IDENTIFIER:i1 EQUAL LITERAL_CHAR SEMICOLON
 ;
 var_type ::=  I_SHORT:i
     | I_LONG:i
-    | I_CHAR:i
     | I_INT:i
     | I_CHAR:i MUL:m
+
 ;
 var_decl   ::= IDENTIFIER:i EQUAL literal:l
     | IDENTIFIER:i
@@ -104,6 +105,7 @@ var_func_decl_list   ::= var_func_decl:vfd COMMA var_func_decl_list:vfdl
     | var_func_decl:vfd
 ;
 var_func_decl ::= var_type:vt IDENTIFIER:i
+
 ;
 
 stmts ::= const_decl stmts:s
@@ -203,8 +205,23 @@ expr_math ::= expr_math ADD expr_math
     | value
 ;
 */
-expr_math ::= value expr_uni 
-    | expr 
+
+//(1+2+5+(2+2*(9-9)))
+
+//((2+2))
+expr ::= expr_math:em
+      
+;
+
+expr_math ::= expr_uni:eu expr_math:em
+            | expr_uni:eu 
+            | symbol:s OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c expr_math:em1
+            | symbol:s OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c
+            | OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c expr_math:em1
+            | OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c
+            | value:u expr_uni:eu expr_math:em
+            | value:u expr_uni:eu
+            | value:u
 ;
 expr_uni ::= ADD:a value:n
     | SUB:s value:n
@@ -212,20 +229,13 @@ expr_uni ::= ADD:a value:n
     | DIV:d value:n
     | MOD:d value:n 
 ;
-expr ::= value:n ADD:a value:n1
+symbol ::= ADD:a
+        |SUB:s
+        |MUL:m
+        |DIV:d
+        |MOD:d
 ;
-expr ::= value:n SUB:s value:n1
-;
-expr ::= value:n MUL:m value:n1
-;
-expr ::= value:n DIV:d value:n1
-;
-expr ::= value:n MOD:d value:n1
-;
-expr ::= OPEN_BRACKET:o expr:e CLOSE_BRACKET:c
-;
-expr ::= value:n
-;
+
 value ::= NUMBER:n
     | IDENTIFIER:i
     | OCTAL_NUMBER:n
