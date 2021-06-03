@@ -63,7 +63,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         jTextSintaxResult = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Scanner");
+        setTitle("Parser");
         setBackground(new java.awt.Color(204, 204, 204));
 
         jPanel1.setBackground(new java.awt.Color(153, 204, 255));
@@ -193,7 +193,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -202,11 +202,13 @@ public class frmPrincipal extends javax.swing.JFrame {
     @SuppressWarnings("empty-statement")
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         // TODO add your handling code here:
-        /*JFileChooser chooser = new JFileChooser();
-        chooser.showOpenDialog(null);*/
+       // JFileChooser chooser = new JFileChooser();
+       // chooser.showOpenDialog(null);
 
         try {
-            Reader lector/* = new BufferedReader(new FileReader(chooser.getSelectedFile()))*/;
+           // Reader lector = new BufferedReader(new FileReader(chooser.getSelectedFile()));
+           // Reader file = new BufferedReader(new FileReader(chooser.getSelectedFile()));
+            Reader lector;
             lector = new BufferedReader(new FileReader("C:\\Users\\liset\\Desktop\\Pruebas.c"));
             Reader file = new BufferedReader(new FileReader("C:\\Users\\liset\\Desktop\\Pruebas.c"));
             //lector = new BufferedReader(new FileReader("C:\\Users\\Fabian Martinez\\OneDrive\\Escritorio\\pru.txt"));
