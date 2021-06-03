@@ -261,13 +261,14 @@ public class frmPrincipal extends javax.swing.JFrame {
             try {
                 parser = new Parser(scanner);
                 s = parser.parse();
+                jTextSintaxResult.setText("");
                 if (parser.errorList.isEmpty()) {
                     jTextSintaxResult.setForeground(Color.green);
                     jTextSintaxResult.setText("Análisis Sintactico exitoso");
                 } else {
                     jTextSintaxResult.setForeground(Color.red);
                     for (ErrorMsg sinError : parser.errorList) {
-                        jTextSintaxResult.setText(sinError.getError() + "\n");
+                        jTextSintaxResult.setText(jTextSintaxResult.getText() + sinError.getError() + "\n");
                     }
                 }
             }catch(Exception ex) {
