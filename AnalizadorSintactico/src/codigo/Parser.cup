@@ -50,8 +50,12 @@ non terminal String program, decl_list, global_decl, const_decl, funct_decl, var
 non terminal String literal, declaration, var_func_decl_list, stmts, var_func_decl;
 non terminal String structs, struct_decl, struct_type, condition_for, condition, var, comparator, change_var,if,else;
 non terminal String switch_sent,mult_case_stmt, case_stmt, case_fin, return,if_sent,if_inst,else_inst, asign_equal;
-non terminal String equals, incr_decr, math_expr, value, expr_uni, expr_math, expr,symbol;
+non terminal String equals, incr_decr, math_expr, expr_uni, expr_math, expr,symbol,case_default,cases_switch,stmts_switch,assigment_type;
+
+
 start with program;
+
+
 
 program ::= decl_list:dl
 ;
@@ -70,9 +74,9 @@ declaration ::= global_decl:gl
    
 ;
 global_decl ::= var_func_decl COMMA var_decl:vd SEMICOLON
-    | var_func_decl EQUAL literal:l COMMA var_decl:vd SEMICOLON
+    | var_func_decl EQUAL assigment_type:at COMMA var_decl:vd SEMICOLON
     | var_func_decl SEMICOLON
-    | var_func_decl EQUAL literal:l SEMICOLON
+    | var_func_decl EQUAL assigment_type:at SEMICOLON
     | I_CHAR:i IDENTIFIER:i1 EQUAL LITERAL_CHAR SEMICOLON
     
 
@@ -83,17 +87,19 @@ var_type ::=  I_SHORT:i
     | I_CHAR:i MUL:m
 
 ;
-var_decl   ::= IDENTIFIER:i EQUAL literal:l
+
+
+var_decl   ::= IDENTIFIER:i EQUAL assigment_type:at
     | IDENTIFIER:i
-    | IDENTIFIER:i EQUAL literal:l COMMA var_decl:vd
+    | IDENTIFIER:i EQUAL assigment_type:at COMMA var_decl:vd
     | IDENTIFIER:i COMMA var_decl:vd
 ;
-literal	::= NUMBER:n
-    | LITERAL_STR:s
-    | OCTAL_NUMBER:n
-    | HEXADECIMAL_NUMBER:n
-    | BINARY_NUMBER:n
+
+assigment_type ::= LITERAL_STR:ls
+                | expr_math:em
+                
 ;
+
 const_decl  ::= I_CONST var_type:vt var_decl:vd SEMICOLON
           
 ;
@@ -128,7 +134,17 @@ stmts ::= const_decl stmts:s
         | expr_math SEMICOLON:sc stmts:sm
         | expr_math
 ;
-
+stmts_switch ::= structs:st stmts_switch:sw
+                | structs:st 
+                | asign_equal:ae SEMICOLON:sc stmts_switch:sw 
+                | asign_equal:ae SEMICOLON:sc
+                | IDENTIFIER:i EQUAL assigment_type:at SEMICOLON stmts_switch:sw
+                | IDENTIFIER:i EQUAL assigment_type:at SEMICOLON
+                | incr_decr SEMICOLON:sc stmts_switch:sw  
+                | incr_decr
+                | expr_math SEMICOLON:sc stmts_switch:sw  
+                | expr_math
+;
 
 
 structs ::= struct_decl OPEN_KEY:ok stmts:s CLOSE_KEY:ck
@@ -152,23 +168,36 @@ if_inst ::= I_IF:i OPEN_BRACKET:ob condition:c CLOSE_BRACKET:cb OPEN_KEY:ok stmt
 else_inst ::= I_ELSE:i OPEN_KEY:ok stmts:s CLOSE_KEY:ck 
 ;
 
-switch_sent ::= I_SWITCH:s OPEN_BRACKET:o var:v CLOSE_BRACKET:c OPEN_KEY:ok mult_case_stmt:mcs CLOSE_KEY:ck
+switch_sent ::= I_SWITCH:s OPEN_BRACKET:o var:v CLOSE_BRACKET:c OPEN_KEY:ok cases_switch:cs CLOSE_KEY:ck
 ;
 
-mult_case_stmt ::= case_stmt:cs mult_case_stmt:mcs | case_stmt:cs                                           
+
+cases_switch ::= mult_case_stmt:mc case_default:cd
+                |mult_case_stmt:mc
+;
+mult_case_stmt ::= case_stmt:cs mult_case_stmt:mcs 
+                   | case_stmt:cs 
+ 
 ; 
-case_stmt ::= I_CASE:c NUMBER:n COLON stmts:s case_fin:cf 
-            | I_CASE:c NUMBER:n COLON stmts:s return:r
-            | I_CASE:c NUMBER:n COLON stmts:s case_fin:cf return:r
-            | I_CASE:c NUMBER:n COLON stmts:s
-            | I_DEFAULT:d COLON:c stmts:s case_fin:cf 
-            | I_DEFAULT:d COLON:c stmts:s return:r
-            | I_DEFAULT:d COLON:c stmts:s case_fin:cf return:r
-            | I_DEFAULT:d COLON:c stmts:s
+case_default ::= I_DEFAULT:d COLON:c stmts_switch:s case_fin:cf 
+            | I_DEFAULT:d COLON:c stmts_switch:s return:r
+            | I_DEFAULT:d COLON:c stmts_switch:s case_fin:cf return:r
+            | I_DEFAULT:d COLON:c stmts_switch:s
+            
+;
+case_stmt ::= I_CASE:c NUMBER:n COLON stmts_switch:s case_fin:cf 
+            | I_CASE:c NUMBER:n COLON stmts_switch:s return:r
+            | I_CASE:c NUMBER:n COLON stmts_switch:s case_fin:cf return:r
+            | I_CASE:c NUMBER:n COLON stmts_switch:s 
+            | I_CASE:c NUMBER:n COLON case_fin:cf 
+            | I_CASE:c NUMBER:n COLON return:r
+            | I_CASE:c NUMBER:n COLON case_fin:cf return:r
+            | I_CASE:c NUMBER:n COLON 
 ;
 case_fin ::= I_BREAK:b SEMICOLON | I_CONTINUE:c SEMICOLON                                                     
 ;
-return ::= I_RETURN:r NUMBER:n SEMICOLON:s                                                                    
+return ::= I_RETURN:r var:v SEMICOLON:s  
+        | I_RETURN:r SEMICOLON:s 
 ;
 
 change_var ::= INCR:i
@@ -209,7 +238,7 @@ expr_math ::= expr_math ADD expr_math
     | expr_math MOD expr_math
 //    | MINUS expr %prec UMINUS
     | OPEN_BRACKET expr_math CLOSE_BRACKET
-    | value
+    | literal
 ;
 */
 
@@ -226,15 +255,15 @@ expr_math ::= expr_uni:eu expr_math:em
             | symbol:s OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c
             | OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c expr_math:em1
             | OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c
-            | value:u expr_uni:eu expr_math:em
-            | value:u expr_uni:eu
-            | value:u
+            | literal:u expr_uni:eu expr_math:em
+            | literal:u expr_uni:eu
+            | literal:u
 ;
-expr_uni ::= ADD:a value:n
-    | SUB:s value:n
-    | MUL:m value:n
-    | DIV:d value:n
-    | MOD:d value:n 
+expr_uni ::= ADD:a literal:n
+    | SUB:s literal:n
+    | MUL:m literal:n
+    | DIV:d literal:n
+    | MOD:d literal:n 
 ;
 symbol ::= ADD:a
         |SUB:s
@@ -243,7 +272,7 @@ symbol ::= ADD:a
         |MOD:d
 ;
 
-value ::= NUMBER:n
+literal ::= NUMBER:n
     | IDENTIFIER:i
     | OCTAL_NUMBER:n
     | HEXADECIMAL_NUMBER:n
