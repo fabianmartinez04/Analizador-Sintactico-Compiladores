@@ -67,12 +67,15 @@ declaration ::= global_decl:gl
     | error OPEN_BRACKET
     | error CLOSE_BRACKET
     | error IDENTIFIER
+   
 ;
 global_decl ::= var_func_decl COMMA var_decl:vd SEMICOLON
     | var_func_decl EQUAL literal:l COMMA var_decl:vd SEMICOLON
     | var_func_decl SEMICOLON
     | var_func_decl EQUAL literal:l SEMICOLON
     | I_CHAR:i IDENTIFIER:i1 EQUAL LITERAL_CHAR SEMICOLON
+    
+
 ;
 var_type ::=  I_SHORT:i
     | I_LONG:i
@@ -92,11 +95,13 @@ literal	::= NUMBER:n
     | BINARY_NUMBER:n
 ;
 const_decl  ::= I_CONST var_type:vt var_decl:vd SEMICOLON
+          
 ;
 funct_decl ::= functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck
     | functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck
     | functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb OPEN_KEY:ok CLOSE_KEY:ck
     | functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb OPEN_KEY:ok CLOSE_KEY:ck
+
 ;
 functin_init   ::= var_func_decl:cfd
     | I_VOID:i IDENTIFIER:id
@@ -106,6 +111,8 @@ var_func_decl_list   ::= var_func_decl:vfd COMMA var_func_decl_list:vfdl
 ;
 var_func_decl ::= var_type:vt IDENTIFIER:i
 
+                
+                
 ;
 
 stmts ::= const_decl stmts:s
