@@ -50,12 +50,11 @@ non terminal String program, decl_list, global_decl, const_decl, funct_decl, var
 non terminal String literal, declaration, var_func_decl_list, stmts, var_func_decl;
 non terminal String structs, struct_decl, struct_type, condition_for, condition, var, comparator, change_var,if,else;
 non terminal String switch_sent,mult_case_stmt, case_stmt, case_fin, return,if_sent,if_inst,else_inst, asign_equal,read_func,write_fun;
-non terminal String equals, incr_decr, math_expr, expr_uni, expr_math, expr,symbol,case_default,cases_switch,stmts_switch,assigment_type,call_fun ,var_list;
+non terminal String equals, incr_decr, math_expr, expr_uni, expr_math, expr,symbol,case_default,cases_switch,stmts_switch,assigment_type;
+non terminal String call_fun ,var_list, write_func ;
 
 
 start with program;
-
-
 
 program ::= decl_list:dl
 ;
@@ -66,40 +65,30 @@ declaration ::= global_decl:gl
     | const_decl:cl 
     | funct_decl:fl 
     | error SEMICOLON
-    | error OPEN_KEY
     | error CLOSE_KEY
-    | error OPEN_BRACKET
-    | error CLOSE_BRACKET
-    | error IDENTIFIER
-   
+    | error CLOSE_BRACKET CLOSE_KEY
+    | error CLOSE_BRACKET SEMICOLON
 ;
 global_decl ::= var_func_decl COMMA var_decl:vd SEMICOLON
     | var_func_decl EQUAL assigment_type:at COMMA var_decl:vd SEMICOLON
     | var_func_decl SEMICOLON
     | var_func_decl EQUAL assigment_type:at SEMICOLON
     | I_CHAR:i IDENTIFIER:i1 EQUAL LITERAL_CHAR SEMICOLON
-    
-
 ;
 var_type ::=  I_SHORT:i
     | I_LONG:i
     | I_INT:i
     | I_CHAR:i MUL:m
-
 ;
-
-
 var_decl   ::= IDENTIFIER:i EQUAL assigment_type:at
     | IDENTIFIER:i
     | IDENTIFIER:i EQUAL assigment_type:at COMMA var_decl:vd
     | IDENTIFIER:i COMMA var_decl:vd
 ;
-
 assigment_type ::= LITERAL_STR:ls
                 | expr_math:em  
                 | call_fun:cf
 ;
-
 const_decl  ::= I_CONST var_type:vt var_decl:vd SEMICOLON
           
 ;
@@ -115,12 +104,8 @@ functin_init   ::= var_func_decl:cfd
 var_func_decl_list   ::= var_func_decl:vfd COMMA var_func_decl_list:vfdl
     | var_func_decl:vfd
 ;
-var_func_decl ::= var_type:vt IDENTIFIER:i
-
-                
-                
+var_func_decl ::= var_type:vt IDENTIFIER:i            
 ;
-
 stmts ::= const_decl stmts:s
         | const_decl
         | global_decl:gl stmts:s
@@ -135,8 +120,8 @@ stmts ::= const_decl stmts:s
         | expr_math
         | read_func:rf stmts:s
         | read_func:rf
-        | write_fun:wf stmts:s
-        | write_fun:wf 
+        | write_func:wf stmts:s
+        | write_func:wf 
         | call_fun:cf SEMICOLON:sc stmts:s
         | call_fun:cf SEMICOLON:sc
         | return:r stmts
@@ -155,29 +140,24 @@ stmts_switch ::= structs:st stmts_switch:sw
                 | expr_math
                 | read_func:rf stmts_switch:ss
                 | read_func:rf
-                | write_fun:wf stmts_switch:ss
-                | write_fun:wf
+                | write_func:wf stmts_switch:ss
+                | write_func:wf
                 | call_fun:cf SEMICOLON:sc stmts_switch:sw  
                 | call_fun:cf SEMICOLON:sc
                 | return:r stmts_switch 
-                | return:r
-
-               
+                | return:r            
 ;
-
 call_fun ::= IDENTIFIER:i OPEN_BRACKET:ob CLOSE_BRACKET:cb 
             | IDENTIFIER:i OPEN_BRACKET:ob var_list:vl CLOSE_BRACKET:cb 
 ;
-
 read_func ::= I_READ:r OPEN_BRACKET:ob IDENTIFIER:i CLOSE_BRACKET:cb SEMICOLON:s
     |   OPEN_BRACKET:ob CLOSE_BRACKET:cb SEMICOLON:s
 ;
-write_func ::= I_WRITE:w OPEN_BRACKET:ob assigment_type:at CLOSE_BRACKET:cb SEMICOLON:s
+write_func ::= I_WRITE:w OPEN_BRACKET:ob var_list:vl CLOSE_BRACKET:cb SEMICOLON:s
 ;
 var_list ::=  assigment_type:at COMMA var_list:vl 
            | assigment_type:at
 ;
-        
 structs ::= struct_decl OPEN_KEY:ok stmts:s CLOSE_KEY:ck
            |switch_sent:ss 
            |if_sent:is
@@ -290,6 +270,5 @@ literal ::= NUMBER:n
     | OCTAL_NUMBER:n
     | HEXADECIMAL_NUMBER:n
     | BINARY_NUMBER:n
-
 ;
 
