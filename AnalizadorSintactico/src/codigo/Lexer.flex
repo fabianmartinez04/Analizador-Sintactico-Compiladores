@@ -22,7 +22,7 @@ WhiteSpace = [ \t\r\n]+
 BackSlash = [\\]
 Operators = ","|";"|"++"|"--"|"=="|">="|">"|"?"|"<="|"<"|"!="|"||"|"&&"|"!"|"="|"+"|"-"|"*"|"/"|"%"|"("|")"|"["|"]"|"{"|"}"|":"|"."|"+="|"-="|"*="|"/="|"&"|"^"|"|"|">>"|"<<"|"~"|"%="|"&="|"^="|"|="|"<<="|">>="|"->"
 Invalid = "ç"|"Ç"|"ñ"|"'"|"Ñ"|"&"|"^"|"@"|"'"|"ê"|"«"|"¿"|"¡"|"Ü"|"╝"|"á"|"é"|"í"|"ó"|"ú"|"Á"|"É"|"Í"|"Ó"|"Ú"
-KeyWords = "auto"|"break"|"case"|"char"|"const"|"continue"|"default"|"do"|"double"|"else"|"enum"|"extern"|"float"|"for"|"goto"|"if"|"int"|"long"|"register"|"return"|"short"|"signed"|"sizeof"|"static"|"struct"|"switch"|"typedef"|"union"|"unsigned"|"void"|"volatile"|"while"
+KeyWords = "read"|"write"|"auto"|"break"|"case"|"char"|"const"|"continue"|"default"|"do"|"double"|"else"|"enum"|"extern"|"float"|"for"|"goto"|"if"|"int"|"long"|"register"|"return"|"short"|"signed"|"sizeof"|"static"|"struct"|"switch"|"typedef"|"union"|"unsigned"|"void"|"volatile"|"while"
 CommentMultiline = "/*" ~"*/"
 Comment = "//".*
 %%
@@ -73,7 +73,7 @@ Comment = "//".*
 
 
 /*KeyWords*/
-( "auto" | "break" | "case" | "char" | "const" | "continue" | "default" | "do" | "double" | "else" | "enum" | "extern" | "float" | "for" | "goto" | "if" | "int" | "long" | "register" | "return" | "short" | "signed" | "sizeof" | "static" | "struct" | "switch" | "typedef" | "union" | "unsigned" | "void" | "volatile" | "while" ) {lexeme = yytext(); row = yyline; column = yycolumn; return Keyword;}
+( "read" | "write" | "auto" | "break" | "case" | "char" | "const" | "continue" | "default" | "do" | "double" | "else" | "enum" | "extern" | "float" | "for" | "goto" | "if" | "int" | "long" | "register" | "return" | "short" | "signed" | "sizeof" | "static" | "struct" | "switch" | "typedef" | "union" | "unsigned" | "void" | "volatile" | "while" ) {lexeme = yytext(); row = yyline; column = yycolumn; return Keyword;}
 
 /*Identifiers*/
 {L}({L}|{DecDigit})* {lexeme = yytext(); row = yyline; column = yycolumn; return Identifier;}

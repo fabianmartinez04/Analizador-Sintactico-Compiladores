@@ -42,15 +42,15 @@ terminal String EQUAL_TO, GREATER_EQUAL, LESS, LESS_EQUAL, GREATER, NOT_EQUAL, L
 terminal String LITERAL_STR, FLOAT_NUMBER, FLOAT_POINT_NUMBER,LITERAL_CHAR;
 terminal String OCTAL_NUMBER, NUMBER, HEXADECIMAL_NUMBER, BINARY_NUMBER;
 terminal String I_BREAK, I_CASE, I_CHAR, I_CONST, I_CONTINUE, I_DEFAULT, I_DO, I_ELSE, I_FOR, I_IF, I_INT, I_LONG;
-terminal String I_RETURN, I_SHORT, I_SWITCH, I_VOID, I_WHILE;
+terminal String I_RETURN, I_SHORT, I_SWITCH, I_VOID, I_WHILE, I_READ, I_WRITE;
 terminal String SEMICOLON, COMMA, IDENTIFIER,COLON;
 
 /* NON TERMINALS */
 non terminal String program, decl_list, global_decl, const_decl, funct_decl, var_type, var_decl, functin_init;
 non terminal String literal, declaration, var_func_decl_list, stmts, var_func_decl;
 non terminal String structs, struct_decl, struct_type, condition_for, condition, var, comparator, change_var,if,else;
-non terminal String switch_sent,mult_case_stmt, case_stmt, case_fin, return,if_sent,if_inst,else_inst, asign_equal;
-non terminal String equals, incr_decr, math_expr, expr_uni, expr_math, expr,symbol,case_default,cases_switch,stmts_switch,assigment_type;
+non terminal String switch_sent,mult_case_stmt, case_stmt, case_fin, return,if_sent,if_inst,else_inst, asign_equal,read_func,write_fun;
+non terminal String equals, incr_decr, math_expr, expr_uni, expr_math, expr,symbol,case_default,cases_switch,stmts_switch,assigment_type,call_fun ,var_list;
 
 
 start with program;
@@ -96,8 +96,8 @@ var_decl   ::= IDENTIFIER:i EQUAL assigment_type:at
 ;
 
 assigment_type ::= LITERAL_STR:ls
-                | expr_math:em
-                
+                | expr_math:em  
+                | call_fun:cf
 ;
 
 const_decl  ::= I_CONST var_type:vt var_decl:vd SEMICOLON
@@ -133,6 +133,15 @@ stmts ::= const_decl stmts:s
         | incr_decr
         | expr_math SEMICOLON:sc stmts:sm
         | expr_math
+        | read_func:rf stmts:s
+        | read_func:rf
+        | write_fun:wf stmts:s
+        | write_fun:wf 
+        | call_fun:cf SEMICOLON:sc stmts:s
+        | call_fun:cf SEMICOLON:sc
+        | return:r stmts
+        | return:r
+
 ;
 stmts_switch ::= structs:st stmts_switch:sw
                 | structs:st 
@@ -144,9 +153,31 @@ stmts_switch ::= structs:st stmts_switch:sw
                 | incr_decr
                 | expr_math SEMICOLON:sc stmts_switch:sw  
                 | expr_math
+                | read_func:rf stmts_switch:ss
+                | read_func:rf
+                | write_fun:wf stmts_switch:ss
+                | write_fun:wf
+                | call_fun:cf SEMICOLON:sc stmts_switch:sw  
+                | call_fun:cf SEMICOLON:sc
+                | return:r stmts_switch 
+                | return:r
+
+               
 ;
 
+call_fun ::= IDENTIFIER:i OPEN_BRACKET:ob CLOSE_BRACKET:cb 
+            | IDENTIFIER:i OPEN_BRACKET:ob var_list:vl CLOSE_BRACKET:cb 
+;
 
+read_func ::= I_READ:r OPEN_BRACKET:ob IDENTIFIER:i CLOSE_BRACKET:cb SEMICOLON:s
+    |   OPEN_BRACKET:ob CLOSE_BRACKET:cb SEMICOLON:s
+;
+write_func ::= I_WRITE:w OPEN_BRACKET:ob assigment_type:at CLOSE_BRACKET:cb SEMICOLON:s
+;
+var_list ::=  assigment_type:at COMMA var_list:vl 
+           | assigment_type:at
+;
+        
 structs ::= struct_decl OPEN_KEY:ok stmts:s CLOSE_KEY:ck
            |switch_sent:ss 
            |if_sent:is
@@ -180,17 +211,14 @@ mult_case_stmt ::= case_stmt:cs mult_case_stmt:mcs
  
 ; 
 case_default ::= I_DEFAULT:d COLON:c stmts_switch:s case_fin:cf 
-            | I_DEFAULT:d COLON:c stmts_switch:s return:r
-            | I_DEFAULT:d COLON:c stmts_switch:s case_fin:cf return:r
             | I_DEFAULT:d COLON:c stmts_switch:s
-            
+            | I_DEFAULT:d COLON:c stmts_switch:s case_fin:cf return:r
+
 ;
 case_stmt ::= I_CASE:c NUMBER:n COLON stmts_switch:s case_fin:cf 
-            | I_CASE:c NUMBER:n COLON stmts_switch:s return:r
-            | I_CASE:c NUMBER:n COLON stmts_switch:s case_fin:cf return:r
             | I_CASE:c NUMBER:n COLON stmts_switch:s 
+            | I_CASE:c NUMBER:n COLON stmts_switch:s case_fin:cf return:r
             | I_CASE:c NUMBER:n COLON case_fin:cf 
-            | I_CASE:c NUMBER:n COLON return:r
             | I_CASE:c NUMBER:n COLON case_fin:cf return:r
             | I_CASE:c NUMBER:n COLON 
 ;
@@ -227,24 +255,8 @@ equals ::= ADD_EQUAL
     | MUL_EQUAL 
     | DIV_EQUAL
 ;
-/*
-math_expr ::= math_expr expr_math_part 
-    | expr_math_part;
-expr_math_part ::= expr_math;
-expr_math ::= expr_math ADD expr_math 
-    | expr_math SUB expr_math 
-    | expr_math MUL expr_math 
-    | expr_math DIV expr_math  
-    | expr_math MOD expr_math
-//    | MINUS expr %prec UMINUS
-    | OPEN_BRACKET expr_math CLOSE_BRACKET
-    | literal
-;
-*/
 
-//(1+2+5+(2+2*(9-9)))
 
-//((2+2))
 expr ::= expr_math:em
       
 ;
@@ -259,6 +271,7 @@ expr_math ::= expr_uni:eu expr_math:em
             | literal:u expr_uni:eu
             | literal:u
 ;
+
 expr_uni ::= ADD:a literal:n
     | SUB:s literal:n
     | MUL:m literal:n
@@ -277,5 +290,6 @@ literal ::= NUMBER:n
     | OCTAL_NUMBER:n
     | HEXADECIMAL_NUMBER:n
     | BINARY_NUMBER:n
+
 ;
 
