@@ -213,8 +213,8 @@ public class frmPrincipal extends javax.swing.JFrame {
             //Reader file = new BufferedReader(new FileReader("C:\\Users\\liset\\Desktop\\Pruebas.c"));
             //lector = new BufferedReader(new FileReader("C:\\Users\\Fabian Martinez\\OneDrive\\Escritorio\\pru.txt"));
             //Reader file = new BufferedReader(new FileReader("C:\\Users\\Fabian Martinez\\OneDrive\\Escritorio\\pru.txt"));
-            lector = new BufferedReader(new FileReader("D:\\Desktop\\Pruebas.c"));
-            Reader file = new BufferedReader(new FileReader("D:\\Desktop\\Pruebas.c"));
+            lector = new BufferedReader(new FileReader("D:\\Desktop\\PruebaParser.txt"));
+            Reader file = new BufferedReader(new FileReader("D:\\Desktop\\PruebaParser.txt"));
             LexerCup scanner = new LexerCup(file);
             Lexer lexer = new Lexer(lector);
             Parser parser;
