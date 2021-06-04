@@ -92,8 +92,9 @@ var_decl   ::= IDENTIFIER:i EQUAL assigment_type:at
     | IDENTIFIER:i error var_decl:vd        {:addSintaxError(i," Token missing");:}
 ;
 assigment_type ::= LITERAL_STR:ls
-                | expr_math:em  
-                | call_fun:cf
+                | expr_math:em 
+                | literal:l
+ 
 ;
 const_decl  ::= I_CONST var_type:vt var_decl:vd SEMICOLON
           
@@ -249,21 +250,21 @@ equals ::= ADD_EQUAL
 expr ::= expr_math:em
       
 ;
-expr_math ::= expr_uni:eu expr_math:em
-            | expr_uni:eu 
-            | symbol:s OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c expr_math:em1
-            | symbol:s OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c
-            | OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c expr_math:em1
+expr_math ::= OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c expr_math:em1
             | OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c
-            | literal:u expr_uni:eu expr_math:em
             | literal:u expr_uni:eu
-            | literal:u
+            | expr_uni:eu
 ;
 
-expr_uni ::= ADD:a literal:n
+expr_uni ::= ADD:a literal:n expr_uni:eu
+    | ADD:a literal:n
+    | SUB:s literal:n expr_uni:eu
     | SUB:s literal:n
-    | MUL:m literal:n
+    | MUL:m literal:n expr_uni:eu
+    | MUL:m literal:n 
+    | DIV:d literal:n expr_uni:eu
     | DIV:d literal:n
+    | MOD:d literal:n expr_uni:eu
     | MOD:d literal:n 
 ;
 symbol ::= ADD:a
@@ -277,6 +278,6 @@ literal ::= NUMBER:n
     | OCTAL_NUMBER:n
     | HEXADECIMAL_NUMBER:n
     | BINARY_NUMBER:n
-    | error {:addSintaxError(""," Unkown error ");:}
+    | call_fun:cf
 ;
 
