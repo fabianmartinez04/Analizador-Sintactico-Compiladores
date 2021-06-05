@@ -215,8 +215,8 @@ public class frmPrincipal extends javax.swing.JFrame {
             //lector = new BufferedReader(new FileReader("C:\\Users\\Fabian Martinez\\OneDrive\\Escritorio\\pru.txt"));
             //Reader file = new BufferedReader(new FileReader("C:\\Users\\Fabian Martinez\\OneDrive\\Escritorio\\pru.txt"));
 
-            lector = new BufferedReader(new FileReader("D:\\Desktop\\PruebaParser.txt"));
-            Reader file = new BufferedReader(new FileReader("D:\\Desktop\\PruebaParser.txt"));
+            lector = new BufferedReader(new FileReader("D:\\Desktop\\P1.c"));
+            Reader file = new BufferedReader(new FileReader("D:\\Desktop\\P1.c"));
 
             LexerCup scanner = new LexerCup(file);
             Lexer lexer = new Lexer(lector);
@@ -277,7 +277,8 @@ public class frmPrincipal extends javax.swing.JFrame {
                     }
                 }
             }catch(Exception ex) {
-                System.err.println(ex.toString());
+                jTextSintaxResult.setForeground(Color.red);
+                jTextSintaxResult.setText("Fatal error: Unkown sintax error");
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(frmPrincipal.class.getName()).log(Level.SEVERE, null, ex);

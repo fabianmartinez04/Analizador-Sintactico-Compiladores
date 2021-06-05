@@ -76,11 +76,11 @@ declaration ::= global_decl:gl
     | const_decl:cl 
     | funct_decl:fl 
     | error SEMICOLON:sm     {:addSintaxError(sm," Missing token ");:}
-   // | error OPEN_KEY:ok      {:addSintaxError(ok," Unknown token { ");:}
+    | error OPEN_KEY:ok      {:addSintaxError(ok," Unknown token { ");:}
     | error CLOSE_KEY:ck     {:addSintaxError(ck," Missing token ");:}
-   // | error OPEN_BRACKET:ob  {:addSintaxError(ob," Unknown token ( ");:}
+    | error OPEN_BRACKET:ob  {:addSintaxError(ob," Unknown token ( ");:}
     | error CLOSE_BRACKET:cb {:addSintaxError(cb," Missing token ");:}
-  //  | error IDENTIFIER:i     {:addSintaxError(i," Unknown token Identifier ");:}
+    | error IDENTIFIER:i     {:addSintaxError(i," Missing token ");:}
 ;
 global_decl ::= var_func_decl COMMA var_decl:vd SEMICOLON
     | var_func_decl EQUAL assigment_type:at COMMA var_decl:vd SEMICOLON
