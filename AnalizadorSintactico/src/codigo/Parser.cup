@@ -55,7 +55,7 @@ terminal String SEMICOLON, COMMA, IDENTIFIER,COLON;
 non terminal String program, decl_list, global_decl, const_decl, funct_decl, var_type, var_decl, functin_init;
 non terminal String literal, declaration, var_func_decl_list, stmts, var_func_decl;
 non terminal String structs, struct_decl, struct_type, condition_for, condition, var, comparator, change_var,if,else;
-non terminal String switch_sent,mult_case_stmt, case_stmt, case_fin, return,if_sent,if_inst,else_inst, asign_equal,read_func,write_fun;
+non terminal String switch_sent,mult_case_stmt, case_stmt, case_fin, return,if_sent,if_inst,else_inst, asign_equal,read_func,write_func;
 non terminal String equals, incr_decr, math_expr, expr_uni, expr_math, expr,symbol,case_default,cases_switch,stmts_switch,assigment_type,call_fun ,var_list;
 
 
@@ -72,12 +72,12 @@ decl_list ::= declaration:d decl_list:dl
 declaration ::= global_decl:gl
     | const_decl:cl 
     | funct_decl:fl 
-    | error SEMICOLON
-    | error OPEN_KEY
-    | error CLOSE_KEY
-    | error OPEN_BRACKET
-    | error CLOSE_BRACKET
-    | error IDENTIFIER
+    | error SEMICOLON:sm     {:addSintaxError(sm," Unknown token");:}
+   // | error OPEN_KEY:ok      {:addSintaxError(ok," Unknown token { ");:}
+    | error CLOSE_KEY:ck     {:addSintaxError(ck," Unknown token");:}
+   // | error OPEN_BRACKET:ob  {:addSintaxError(ob," Unknown token ( ");:}
+    | error CLOSE_BRACKET:cb {:addSintaxError(cb," Unknown token");:}
+  //  | error IDENTIFIER:i     {:addSintaxError(i," Unknown token Identifier ");:}
 ;
 global_decl ::= var_func_decl COMMA var_decl:vd SEMICOLON
     | var_func_decl EQUAL assigment_type:at COMMA var_decl:vd SEMICOLON
@@ -94,7 +94,7 @@ var_decl   ::= IDENTIFIER:i EQUAL assigment_type:at
     | IDENTIFIER:i
     | IDENTIFIER:i EQUAL assigment_type:at COMMA var_decl:vd
     | IDENTIFIER:i COMMA var_decl:vd
-    | IDENTIFIER:i error var_decl:vd        {:addSintaxError(i," Token missing");:}
+  
 ;
 assigment_type ::= LITERAL_STR:ls
                 | expr_math:em 
@@ -107,10 +107,10 @@ funct_decl ::= functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRA
     | functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck
     | functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb OPEN_KEY:ok CLOSE_KEY:ck
     | functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb OPEN_KEY:ok CLOSE_KEY:ck
-    | functin_init:fi OPEN_BRACKET:ob error CLOSE_BRACKET:cb OPEN_KEY:ok CLOSE_KEY:ck   {:addSintaxError(cb,"Function param invalid");:}
-    | functin_init:fi OPEN_BRACKET:ob error OPEN_KEY:ok CLOSE_KEY:ck {:addSintaxError(ok," Token missing ) ");:}
-    | functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb error stmts:s CLOSE_KEY:ck   {:addSintaxError(cb," Token missing { ");:}
-    | functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb error stmts:s CLOSE_KEY:ck   {:addSintaxError(ck," Token missing { ");:}
+   // | functin_init:fi OPEN_BRACKET:ob error CLOSE_BRACKET:cb OPEN_KEY:ok CLOSE_KEY:ck   {:addSintaxError(cb,"Function param invalid");:}
+   // | functin_init:fi OPEN_BRACKET:ob error OPEN_KEY:ok CLOSE_KEY:ck {:addSintaxError(ok," Token missing ) ");:}
+    //| functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb error stmts:s CLOSE_KEY:ck   {:addSintaxError(cb," Token missing { ");:}
+    //| functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb error stmts:s CLOSE_KEY:ck   {:addSintaxError(ck," Token missing { ");:}
 ;
 functin_init   ::= var_func_decl:cfd
     | I_VOID:i IDENTIFIER:id
@@ -138,8 +138,8 @@ stmts ::= const_decl stmts:s
         | expr_math
         | read_func:rf stmts:s
         | read_func:rf
-        | write_fun:wf stmts:s
-        | write_fun:wf 
+        | write_func:wf stmts:s
+        | write_func:wf 
         | call_fun:cf SEMICOLON:sc stmts:s
         | call_fun:cf SEMICOLON:sc
         | return:r stmts
@@ -162,8 +162,8 @@ stmts_switch ::= structs:st stmts_switch:sw
                 | expr_math
                 | read_func:rf stmts_switch:ss
                 | read_func:rf
-                | write_fun:wf stmts_switch:ss
-                | write_fun:wf
+                | write_func:wf stmts_switch:ss
+                | write_func:wf
                 | call_fun:cf SEMICOLON:sc stmts_switch:sw  
                 | call_fun:cf SEMICOLON:sc
                 | return:r stmts_switch 
@@ -177,8 +177,10 @@ call_fun ::= IDENTIFIER:i OPEN_BRACKET:ob CLOSE_BRACKET:cb
 read_func ::= I_READ:r OPEN_BRACKET:ob IDENTIFIER:i CLOSE_BRACKET:cb SEMICOLON:s
     |   OPEN_BRACKET:ob CLOSE_BRACKET:cb SEMICOLON:s
 ;
-write_func ::= I_WRITE:w OPEN_BRACKET:ob assigment_type:at CLOSE_BRACKET:cb SEMICOLON:s
+
+write_func ::= I_WRITE:w OPEN_BRACKET:ob var_list:vl CLOSE_BRACKET:cb SEMICOLON:s
 ;
+
 var_list ::=  assigment_type:at COMMA var_list:vl 
            | assigment_type:at
 ;
@@ -258,12 +260,15 @@ equals ::= ADD_EQUAL
     | DIV_EQUAL
 ;
 
+
+
+
+
 expr_math ::= OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c expr_math:em1
             | OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c
             | literal:u expr_uni:eu
             | expr_uni:eu
 ;
-
 
 expr_uni ::= ADD:a literal:n expr_uni:eu
     | ADD:a literal:n
