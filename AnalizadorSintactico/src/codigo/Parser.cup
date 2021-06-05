@@ -7,6 +7,7 @@ parser code
 {:
     public LinkedList<ErrorMsg> errorList = new LinkedList<ErrorMsg>();
     private Integer row, column;
+    private String tokenName;
 
     public void syntax_error(Symbol s) 
     {
@@ -15,6 +16,7 @@ parser code
         int column = s.left + 1;
         this.row = row;
         this.column = column;
+        tokenName = lexeme;
         System.out.println("Sintax error at: " + lexeme + " row: " + row + " column: " + column);
         ErrorMsg error =  new ErrorMsg(lexeme, "Syntax error: " + s, row, column);
         //errorList.add(error);
@@ -22,13 +24,14 @@ parser code
 
     public void addSintaxError(String s, String msg) 
     {
-        ErrorMsg error =  new ErrorMsg(s, "Syntax error: " + msg, row, column);
+        ErrorMsg error =  new ErrorMsg(tokenName, "Syntax error: " + msg, row, column);
         errorList.add(error);
     }
 
     public void unrecovered_syntax_error(Symbol s)
     {        
         String lexeme = s.value.toString();
+        tokenName = lexeme;
         int row = s.right + 1;
         int column = s.left + 1;
         this.row = row;
@@ -53,7 +56,7 @@ terminal String SEMICOLON, COMMA, IDENTIFIER,COLON;
 
 /* NON TERMINALS */
 non terminal String program, decl_list, global_decl, const_decl, funct_decl, var_type, var_decl, functin_init;
-non terminal String literal, declaration, var_func_decl_list, stmts, var_func_decl;
+non terminal String literal, declaration, var_func_decl_list, stmts, var_func_decl, condition_list;
 non terminal String structs, struct_decl, struct_type, condition_for, condition, var, comparator, change_var,if,else;
 non terminal String switch_sent,mult_case_stmt, case_stmt, case_fin, return,if_sent,if_inst,else_inst, asign_equal,read_func,write_func;
 non terminal String equals, incr_decr, math_expr, expr_uni, expr_math, expr,symbol,case_default,cases_switch,stmts_switch,assigment_type,call_fun ,var_list;
@@ -72,23 +75,23 @@ decl_list ::= declaration:d decl_list:dl
 declaration ::= global_decl:gl
     | const_decl:cl 
     | funct_decl:fl 
-    | error SEMICOLON:sm     {:addSintaxError(sm," Unknown token");:}
+    | error SEMICOLON:sm     {:addSintaxError(sm," Missing token ");:}
    // | error OPEN_KEY:ok      {:addSintaxError(ok," Unknown token { ");:}
-    | error CLOSE_KEY:ck     {:addSintaxError(ck," Unknown token");:}
+    | error CLOSE_KEY:ck     {:addSintaxError(ck," Missing token ");:}
    // | error OPEN_BRACKET:ob  {:addSintaxError(ob," Unknown token ( ");:}
-    | error CLOSE_BRACKET:cb {:addSintaxError(cb," Unknown token");:}
+    | error CLOSE_BRACKET:cb {:addSintaxError(cb," Missing token ");:}
   //  | error IDENTIFIER:i     {:addSintaxError(i," Unknown token Identifier ");:}
 ;
 global_decl ::= var_func_decl COMMA var_decl:vd SEMICOLON
     | var_func_decl EQUAL assigment_type:at COMMA var_decl:vd SEMICOLON
     | var_func_decl SEMICOLON
     | var_func_decl EQUAL assigment_type:at SEMICOLON
-    | I_CHAR:i IDENTIFIER:i1 EQUAL LITERAL_CHAR SEMICOLON
 ;
 var_type ::=  I_SHORT:i
     | I_LONG:i
     | I_INT:i
     | I_CHAR:i MUL:m
+    | I_CHAR
 ;
 var_decl   ::= IDENTIFIER:i EQUAL assigment_type:at
     | IDENTIFIER:i
@@ -107,10 +110,10 @@ funct_decl ::= functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRA
     | functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck
     | functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb OPEN_KEY:ok CLOSE_KEY:ck
     | functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb OPEN_KEY:ok CLOSE_KEY:ck
-   // | functin_init:fi OPEN_BRACKET:ob error CLOSE_BRACKET:cb OPEN_KEY:ok CLOSE_KEY:ck   {:addSintaxError(cb,"Function param invalid");:}
-   // | functin_init:fi OPEN_BRACKET:ob error OPEN_KEY:ok CLOSE_KEY:ck {:addSintaxError(ok," Token missing ) ");:}
-    //| functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb error stmts:s CLOSE_KEY:ck   {:addSintaxError(cb," Token missing { ");:}
-    //| functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb error stmts:s CLOSE_KEY:ck   {:addSintaxError(ck," Token missing { ");:}
+    //| functin_init:fi OPEN_BRACKET:ob error CLOSE_BRACKET:cb OPEN_KEY:ok CLOSE_KEY:ck   {:addSintaxError(cb,"Function param invalid");:}
+    //| functin_init:fi OPEN_BRACKET:ob error OPEN_KEY:ok CLOSE_KEY:ck {:addSintaxError(ok," Missing token ");:}
+    //| functin_init:fi OPEN_BRACKET:ob CLOSE_BRACKET:cb error stmts:s CLOSE_KEY:ck   {:addSintaxError(cb," Missing token ");:}
+    //| functin_init:fi OPEN_BRACKET:ob var_func_decl_list:vfdl CLOSE_BRACKET:cb error stmts:s CLOSE_KEY:ck   {:addSintaxError(ck," Missing token");:}
 ;
 functin_init   ::= var_func_decl:cfd
     | I_VOID:i IDENTIFIER:id
@@ -189,7 +192,7 @@ structs ::= struct_decl OPEN_KEY:ok stmts:s CLOSE_KEY:ck
            |switch_sent:ss 
            |if_sent:is
 ;            
-struct_decl ::= struct_type:st OPEN_BRACKET:ob condition:c CLOSE_BRACKET:cb
+struct_decl ::= struct_type:st OPEN_BRACKET:ob condition_list:c CLOSE_BRACKET:cb
             | struct_type:st OPEN_BRACKET:ob condition_for:cf CLOSE_BRACKET:cb 
 ;
 struct_type ::= I_FOR:f
@@ -198,7 +201,7 @@ struct_type ::= I_FOR:f
 if_sent ::= if_inst:is else_inst:es
         |if_inst:is
 ;
-if_inst ::= I_IF:i OPEN_BRACKET:ob condition:c CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck 
+if_inst ::= I_IF:i OPEN_BRACKET:ob condition_list:c CLOSE_BRACKET:cb OPEN_KEY:ok stmts:s CLOSE_KEY:ck 
 ;
 else_inst ::= I_ELSE:i OPEN_KEY:ok stmts:s CLOSE_KEY:ck 
 ;
@@ -232,7 +235,13 @@ return ::= I_RETURN:r var:v SEMICOLON:s
 change_var ::= INCR:i
             |DECR:d
 ;
-condition ::=  var:v comparator:c var:v1 
+condition_list ::= condition comparator condition_list 
+                |condition
+;
+condition ::=  var:v comparator:c var:v1
+            | OPEN_BRACKET var:v comparator:c var:v1 CLOSE_BRACKET
+            | OPEN_BRACKET var:v CLOSE_BRACKET
+
 ;
 condition_for ::= var_type:vt var_decl:vd SEMICOLON:sc condition:c SEMICOLON:sc1 incr_decr
 ;
@@ -247,6 +256,7 @@ comparator ::= EQUAL_TO:et
              |NOT_EQUAL:ne
              |LOGICAL_AND
              |LOGICAL_OR
+
 ;
 var ::= NUMBER:n
     | IDENTIFIER:i

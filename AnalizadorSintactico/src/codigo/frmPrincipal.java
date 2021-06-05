@@ -120,6 +120,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         jLabelSintax.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabelSintax.setText("Analisis Sintactico");
 
+        jTextSintaxResult.setEditable(false);
         jTextSintaxResult.setColumns(20);
         jTextSintaxResult.setRows(5);
         jScrollPane4.setViewportView(jTextSintaxResult);
@@ -209,13 +210,13 @@ public class frmPrincipal extends javax.swing.JFrame {
            // Reader lector = new BufferedReader(new FileReader(chooser.getSelectedFile()));
            // Reader file = new BufferedReader(new FileReader(chooser.getSelectedFile()));
             Reader lector;
-            lector = new BufferedReader(new FileReader("C:\\Users\\liset\\Desktop\\Pruebas.c"));
-            Reader file = new BufferedReader(new FileReader("C:\\Users\\liset\\Desktop\\Pruebas.c"));
+            //lector = new BufferedReader(new FileReader("C:\\Users\\liset\\Desktop\\Pruebas.c"));
+            //Reader file = new BufferedReader(new FileReader("C:\\Users\\liset\\Desktop\\Pruebas.c"));
             //lector = new BufferedReader(new FileReader("C:\\Users\\Fabian Martinez\\OneDrive\\Escritorio\\pru.txt"));
             //Reader file = new BufferedReader(new FileReader("C:\\Users\\Fabian Martinez\\OneDrive\\Escritorio\\pru.txt"));
 
-            //lector = new BufferedReader(new FileReader("D:\\Desktop\\Pruebas.c"));
-            //Reader file = new BufferedReader(new FileReader("D:\\Desktop\\Pruebas.c"));
+            lector = new BufferedReader(new FileReader("D:\\Desktop\\PruebaParser.txt"));
+            Reader file = new BufferedReader(new FileReader("D:\\Desktop\\PruebaParser.txt"));
 
             LexerCup scanner = new LexerCup(file);
             Lexer lexer = new Lexer(lector);
