@@ -57,6 +57,7 @@ non terminal String call_fun ,var_list, write_func ;
 start with program;
 
 program ::= decl_list:dl
+    
 ;
 decl_list ::= declaration:d decl_list:dl
     | declaration:d | asign_equal:ae
@@ -87,7 +88,7 @@ var_decl   ::= IDENTIFIER:i EQUAL assigment_type:at
 ;
 assigment_type ::= LITERAL_STR:ls
                 | expr_math:em  
-                | call_fun:cf
+                | literal:cf
 ;
 const_decl  ::= I_CONST var_type:vt var_decl:vd SEMICOLON
           
@@ -114,6 +115,10 @@ stmts ::= const_decl stmts:s
         | structs:st 
         | asign_equal:ae SEMICOLON:sc stmts:sm
         | asign_equal:ae SEMICOLON:sc
+        | IDENTIFIER:i EQUAL assigment_type:at SEMICOLON stmts:sm
+        | IDENTIFIER:i EQUAL assigment_type:at SEMICOLON
+        | MUL:m IDENTIFIER:i EQUAL assigment_type:at SEMICOLON stmts:sm
+        | MUL:m IDENTIFIER:i EQUAL assigment_type:at SEMICOLON
         | incr_decr SEMICOLON:sc stmts:sm
         | incr_decr
         | expr_math SEMICOLON:sc stmts:sm
@@ -126,26 +131,31 @@ stmts ::= const_decl stmts:s
         | call_fun:cf SEMICOLON:sc
         | return:r stmts
         | return:r
+        | case_fin:cf stmts
+        | case_fin:cf
 
-;
+;   
 stmts_switch ::= structs:st stmts_switch:sw
                 | structs:st 
                 | asign_equal:ae SEMICOLON:sc stmts_switch:sw 
                 | asign_equal:ae SEMICOLON:sc
                 | IDENTIFIER:i EQUAL assigment_type:at SEMICOLON stmts_switch:sw
                 | IDENTIFIER:i EQUAL assigment_type:at SEMICOLON
-                | incr_decr SEMICOLON:sc stmts_switch:sw  
+                | MUL:m IDENTIFIER:i EQUAL assigment_type:at SEMICOLON stmts_switch:sw
+                | MUL:m IDENTIFIER:i EQUAL assigment_type:at SEMICOLON
+                | incr_decr SEMICOLON:sc stmts_switch:sw
                 | incr_decr
-                | expr_math SEMICOLON:sc stmts_switch:sw  
+                | expr_math SEMICOLON:sc stmts_switch:sw
                 | expr_math
                 | read_func:rf stmts_switch:ss
                 | read_func:rf
                 | write_func:wf stmts_switch:ss
                 | write_func:wf
-                | call_fun:cf SEMICOLON:sc stmts_switch:sw  
+                | call_fun:cf SEMICOLON:sc stmts_switch:sw
                 | call_fun:cf SEMICOLON:sc
                 | return:r stmts_switch 
-                | return:r            
+                | return:r
+
 ;
 call_fun ::= IDENTIFIER:i OPEN_BRACKET:ob CLOSE_BRACKET:cb 
             | IDENTIFIER:i OPEN_BRACKET:ob var_list:vl CLOSE_BRACKET:cb 
@@ -216,6 +226,7 @@ condition ::=  var:v comparator:c var:v1
 condition_for ::= var_type:vt var_decl:vd SEMICOLON:sc condition:c SEMICOLON:sc1 incr_decr
 ;
 incr_decr ::= IDENTIFIER:i change_var:cv
+            | change_var:cv IDENTIFIER:i
 ;
 comparator ::= EQUAL_TO:et 
              |GREATER_EQUAL:ge
@@ -223,9 +234,12 @@ comparator ::= EQUAL_TO:et
              |LESS_EQUAL:le
              |GREATER:gr
              |NOT_EQUAL:ne
+             |LOGICAL_AND
+             |LOGICAL_OR
 ;
 var ::= NUMBER:n
     | IDENTIFIER:i
+    |LOGICAL_NOT:ln IDENTIFIER:i
 ;
 asign_equal ::= IDENTIFIER:i equals:e var
 ;
@@ -237,38 +251,39 @@ equals ::= ADD_EQUAL
 ;
 
 
-expr ::= expr_math:em
-      
-;
 
-expr_math ::= expr_uni:eu expr_math:em
-            | expr_uni:eu 
-            | symbol:s OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c expr_math:em1
-            | symbol:s OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c
-            | OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c expr_math:em1
+
+expr_math ::= OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c expr_math:em1
             | OPEN_BRACKET:o expr_math:em CLOSE_BRACKET:c
-            | literal:u expr_uni:eu expr_math:em
-            | literal:u expr_uni:eu
-            | literal:u
+            | literal:u expr_uni:eu 
+            | expr_uni:eu 
+            
 ;
 
-expr_uni ::= ADD:a literal:n
+
+
+
+expr_uni ::= ADD:a literal:n expr_uni:eu
+    | ADD:a literal:n
+    | SUB:s literal:n expr_uni:eu
     | SUB:s literal:n
-    | MUL:m literal:n
+    | MUL:m literal:n expr_uni:eu
+    | MUL:m literal:n 
+    | DIV:d literal:n expr_uni:eu
     | DIV:d literal:n
+    | MOD:d literal:n expr_uni:eu
     | MOD:d literal:n 
 ;
-symbol ::= ADD:a
-        |SUB:s
-        |MUL:m
-        |DIV:d
-        |MOD:d
-;
+
+
+
+
 
 literal ::= NUMBER:n
     | IDENTIFIER:i
     | OCTAL_NUMBER:n
     | HEXADECIMAL_NUMBER:n
     | BINARY_NUMBER:n
+    | call_fun:cf
 ;
 

@@ -59,7 +59,7 @@ Comment = "//".*
 <YYINITIAL> "||" { return new Symbol(Sym.LOGICAL_OR, yycolumn, yyline, yytext()); }
 <YYINITIAL> "&&" { return new Symbol(Sym.LOGICAL_AND, yycolumn, yyline, yytext()); }
 <YYINITIAL> "!" { return new Symbol(Sym.LOGICAL_NOT, yycolumn, yyline, yytext()); }
- 
+
 
 /*Comments*/
 {Comment} {/*Ignore*/} 
