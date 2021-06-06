@@ -203,20 +203,20 @@ public class frmPrincipal extends javax.swing.JFrame {
     @SuppressWarnings("empty-statement")
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         // TODO add your handling code here:
-       // JFileChooser chooser = new JFileChooser();
-       // chooser.showOpenDialog(null);
+        JFileChooser chooser = new JFileChooser();
+       chooser.showOpenDialog(null);
 
         try {
-           // Reader lector = new BufferedReader(new FileReader(chooser.getSelectedFile()));
-           // Reader file = new BufferedReader(new FileReader(chooser.getSelectedFile()));
-            Reader lector;
+           Reader lector = new BufferedReader(new FileReader(chooser.getSelectedFile()));
+           Reader file = new BufferedReader(new FileReader(chooser.getSelectedFile()));
+           // Reader lector;
             //lector = new BufferedReader(new FileReader("C:\\Users\\liset\\Desktop\\Pruebas.c"));
             //Reader file = new BufferedReader(new FileReader("C:\\Users\\liset\\Desktop\\Pruebas.c"));
             //lector = new BufferedReader(new FileReader("C:\\Users\\Fabian Martinez\\OneDrive\\Escritorio\\pru.txt"));
             //Reader file = new BufferedReader(new FileReader("C:\\Users\\Fabian Martinez\\OneDrive\\Escritorio\\pru.txt"));
 
-            lector = new BufferedReader(new FileReader("D:\\Desktop\\P1.c"));
-            Reader file = new BufferedReader(new FileReader("D:\\Desktop\\P1.c"));
+            //lector = new BufferedReader(new FileReader("D:\\Desktop\\P1.c"));
+            //Reader file = new BufferedReader(new FileReader("D:\\Desktop\\P1.c"));
 
             LexerCup scanner = new LexerCup(file);
             Lexer lexer = new Lexer(lector);
